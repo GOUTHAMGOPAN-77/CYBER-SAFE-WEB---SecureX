@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SecureX — Admin · Incident Reports</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#020b0f;
+  --bg2:#041018;
+  --bg3:#071520;
+  --card:#0a1d2a;
+  --card2:#0d2235;
+  --accent:#00ff88;
+  --accent2:#00cfff;
+  --accent3:#ff3c3c;
+  --accent4:#ffc83c;
+  --text:#ddeeff;
+  --muted:#6a8fa8;
+  --border:rgba(0,255,136,0.15);
+  --border2:rgba(0,207,255,0.15);
+  --border3:rgba(255,60,60,0.2);
+  --font-head:'Orbitron',monospace;
+  --font-body:'Rajdhani',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+
+/* ── LAYOUT ── */
+.shell{display:flex;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:240px;min-width:240px;
+  background:var(--bg2);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  z-index:100;
+}
+.sb-logo{
+  padding:1.5rem 1.25rem;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+}
+.sb-logo svg{flex-shrink:0}
+.sb-logo-text{font-family:var(--font-head);font-size:0.95rem;font-weight:900;color:var(--accent);letter-spacing:0.06em}
+.sb-logo-text span{color:var(--accent2)}
+.sb-badge{
+  margin:1rem 1.25rem 0;
+  padding:0.35rem 0.75rem;
+  background:rgba(255,60,60,0.1);
+  border:1px solid var(--border3);
+  font-family:var(--font-head);font-size:0.52rem;
+  letter-spacing:0.18em;color:var(--accent3);
+  text-transform:uppercase;text-align:center;
+}
+.sb-section{padding:1.25rem 1rem 0.5rem;font-family:var(--font-head);font-size:0.5rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase}
+.sb-nav{list-style:none;padding:0 0.5rem}
+.sb-nav li a{
+  display:flex;align-items:center;gap:0.65rem;
+  padding:0.65rem 0.75rem;
+  font-family:var(--font-head);font-size:0.58rem;letter-spacing:0.1em;
+  color:var(--muted);text-decoration:none;text-transform:uppercase;
+  border-radius:2px;transition:all 0.2s;cursor:pointer;border:1px solid transparent;
+}
+.sb-nav li a:hover{color:var(--accent);background:rgba(0,255,136,0.05);border-color:var(--border)}
+.sb-nav li a.active{color:var(--accent);background:rgba(0,255,136,0.08);border-color:var(--border)}
+.sb-nav li a .icon{font-size:0.9rem;width:18px;text-align:center}
+.sb-divider{height:1px;background:var(--border);margin:0.75rem 1rem}
+.sb-status{
+  margin-top:auto;padding:1rem 1.25rem;
+  border-top:1px solid var(--border);
+  font-size:0.78rem;color:var(--muted);
+}
+.sb-status .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-right:0.4rem;animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+
+/* ── MAIN AREA ── */
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+
+/* ── TOPBAR ── */
+.topbar{
+  background:rgba(2,11,15,0.95);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0 2rem;
+  display:flex;align-items:center;gap:1rem;
+  height:56px;position:sticky;top:0;z-index:90;
+}
+.topbar-title{font-family:var(--font-head);font-size:0.7rem;letter-spacing:0.15em;color:var(--text);text-transform:uppercase;flex:1}
+.topbar-title span{color:var(--muted);font-weight:400}
+.topbar-search{
+  display:flex;align-items:center;gap:0.5rem;
+  background:var(--bg3);border:1px solid rgba(221,238,255,0.08);
+  padding:0.4rem 0.9rem;min-width:220px;
+}
+.topbar-search input{
+  background:transparent;border:none;outline:none;
+  color:var(--text);font-family:var(--font-body);font-size:0.88rem;
+  width:100%;
+}
+.topbar-search input::placeholder{color:var(--muted)}
+.topbar-search .s-icon{color:var(--muted);font-size:0.9rem}
+.topbar-actions{display:flex;align-items:center;gap:0.75rem}
+.btn-sm{
+  padding:0.4rem 0.9rem;
+  font-family:var(--font-head);font-size:0.55rem;
+  letter-spacing:0.12em;text-transform:uppercase;
+  border:1px solid var(--border);
+  background:transparent;color:var(--muted);
+  cursor:pointer;transition:all 0.2s;
+}
+.btn-sm:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sm.primary{border-color:var(--accent);color:var(--accent);background:rgba(0,255,136,0.06)}
+.btn-sm.danger{border-color:var(--accent3);color:var(--accent3)}
+
+/* ── PAGE CONTENT ── */
+.content{padding:2rem;flex:1}
+
+/* ── STATS ROW ── */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2rem}
+.stat-card{
+  padding:1.5rem;
+  border:1px solid var(--border);background:var(--card);
+  position:relative;overflow:hidden;
+}
+.stat-card::after{
+  content:'';position:absolute;top:0;left:0;width:3px;height:100%;
+  background:var(--accent-line,var(--accent));
+}
+.stat-card .sc-label{font-family:var(--font-head);font-size:0.52rem;letter-spacing:0.18em;color:var(--muted);text-transform:uppercase;margin-bottom:0.5rem}
+.stat-card .sc-num{font-family:var(--font-head);font-size:2rem;font-weight:900;color:var(--sc-color,var(--accent));line-height:1}
+.stat-card .sc-sub{font-size:0.78rem;color:var(--muted);margin-top:0.3rem}
+.sc-red{--accent-line:var(--accent3);--sc-color:var(--accent3)}
+.sc-yellow{--accent-line:var(--accent4);--sc-color:var(--accent4)}
+.sc-blue{--accent-line:var(--accent2);--sc-color:var(--accent2)}
+
+/* ── PANEL ── */
+.panel{border:1px solid var(--border);background:var(--card);margin-bottom:1.5rem}
+.panel-head{
+  padding:1rem 1.5rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+}
+.panel-title{font-family:var(--font-head);font-size:0.65rem;letter-spacing:0.15em;color:var(--text);text-transform:uppercase;flex:1}
+.panel-title span{color:var(--muted);font-weight:400}
+
+/* ── FILTERS ── */
+.filter-row{display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center}
+.filter-select{
+  background:var(--bg3);border:1px solid rgba(221,238,255,0.1);
+  color:var(--muted);padding:0.35rem 0.75rem;
+  font-family:var(--font-head);font-size:0.55rem;letter-spacing:0.1em;
+  text-transform:uppercase;outline:none;cursor:pointer;
+  appearance:none;
+}
+.filter-select:focus{border-color:var(--accent)}
+.filter-select option{background:var(--bg2);color:var(--text)}
+.filter-tag{
+  display:inline-flex;align-items:center;gap:0.3rem;
+  padding:0.3rem 0.65rem;
+  border:1px solid var(--border);background:transparent;
+  font-family:var(--font-head);font-size:0.52rem;letter-spacing:0.1em;
+  color:var(--muted);text-transform:uppercase;cursor:pointer;transition:all 0.2s;
+}
+.filter-tag:hover,.filter-tag.active{border-color:var(--accent);color:var(--accent);background:rgba(0,255,136,0.06)}
+.filter-tag.ft-red.active{border-color:var(--accent3);color:var(--accent3);background:rgba(255,60,60,0.06)}
+.filter-tag.ft-yellow.active{border-color:var(--accent4);color:var(--accent4);background:rgba(255,200,60,0.06)}
+.filter-tag.ft-blue.active{border-color:var(--accent2);color:var(--accent2);background:rgba(0,207,255,0.06)}
+
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+thead th{
+  padding:0.75rem 1.25rem;
+  background:var(--bg3);
+  font-family:var(--font-head);font-size:0.52rem;
+  letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;
+  text-align:left;border-bottom:1px solid var(--border);
+  white-space:nowrap;cursor:pointer;user-select:none;
+}
+thead th:hover{color:var(--accent)}
+thead th .sort-icon{margin-left:0.3rem;opacity:0.4}
+thead th.sorted .sort-icon{opacity:1;color:var(--accent)}
+tbody tr{border-bottom:1px solid rgba(221,238,255,0.05);transition:background 0.15s;cursor:pointer}
+tbody tr:hover{background:rgba(0,255,136,0.03)}
+tbody tr.selected{background:rgba(0,255,136,0.06)}
+td{padding:0.85rem 1.25rem;vertical-align:middle;color:var(--text)}
+td.mono{font-family:var(--font-mono);font-size:0.78rem;color:var(--accent2)}
+.no-data{text-align:center;padding:3rem;color:var(--muted);font-family:var(--font-head);font-size:0.65rem;letter-spacing:0.15em}
+
+/* ── BADGES ── */
+.badge{
+  display:inline-block;
+  padding:0.18rem 0.55rem;
+  font-family:var(--font-head);font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;
+  border:1px solid;
+}
+.badge-low{border-color:rgba(0,255,136,0.3);color:var(--accent);background:rgba(0,255,136,0.07)}
+.badge-medium{border-color:rgba(255,200,60,0.35);color:var(--accent4);background:rgba(255,200,60,0.07)}
+.badge-high{border-color:rgba(255,100,50,0.35);color:#ff6b35;background:rgba(255,100,50,0.07)}
+.badge-critical{border-color:rgba(255,60,60,0.4);color:var(--accent3);background:rgba(255,60,60,0.1)}
+.badge-open{border-color:rgba(0,207,255,0.3);color:var(--accent2);background:rgba(0,207,255,0.07)}
+.badge-investigating{border-color:rgba(255,200,60,0.35);color:var(--accent4);background:rgba(255,200,60,0.07)}
+.badge-resolved{border-color:rgba(0,255,136,0.3);color:var(--accent);background:rgba(0,255,136,0.07)}
+.badge-closed{border-color:rgba(106,143,168,0.3);color:var(--muted);background:rgba(106,143,168,0.07)}
+
+/* ── INCIDENT TYPE CHIP ── */
+.type-chip{
+  font-size:0.8rem;color:var(--text);
+  display:flex;align-items:center;gap:0.4rem;
+}
+.type-chip .type-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+
+/* ── PAGINATION ── */
+.pagination{
+  display:flex;align-items:center;gap:0.5rem;
+  padding:1rem 1.25rem;
+  border-top:1px solid var(--border);
+  font-size:0.82rem;color:var(--muted);
+}
+.pagination .pg-info{flex:1}
+.pg-btn{
+  padding:0.3rem 0.7rem;
+  border:1px solid var(--border);
+  background:transparent;color:var(--muted);
+  font-family:var(--font-head);font-size:0.52rem;
+  letter-spacing:0.1em;cursor:pointer;transition:all 0.2s;
+}
+.pg-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.pg-btn:disabled{opacity:0.35;cursor:not-allowed}
+.pg-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,255,136,0.08)}
+.pg-num{font-family:var(--font-mono);font-size:0.75rem;color:var(--muted)}
+
+/* ── DETAIL DRAWER ── */
+.drawer-overlay{
+  position:fixed;inset:0;background:rgba(2,11,15,0.7);backdrop-filter:blur(4px);
+  z-index:200;opacity:0;pointer-events:none;transition:opacity 0.3s;
+}
+.drawer-overlay.open{opacity:1;pointer-events:all}
+.drawer{
+  position:fixed;right:0;top:0;height:100vh;width:520px;max-width:95vw;
+  background:var(--bg2);border-left:1px solid var(--border);
+  z-index:201;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.drawer.open{transform:translateX(0)}
+.drawer-head{
+  padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:1rem;
+}
+.drawer-ticket{font-family:var(--font-mono);font-size:0.75rem;color:var(--accent2);flex:1}
+.drawer-close{
+  background:transparent;border:1px solid var(--border);
+  color:var(--muted);font-family:var(--font-head);font-size:0.55rem;
+  letter-spacing:0.1em;padding:0.35rem 0.75rem;cursor:pointer;transition:all 0.2s;
+}
+.drawer-close:hover{border-color:var(--accent3);color:var(--accent3)}
+.drawer-body{padding:1.5rem;overflow-y:auto;flex:1}
+.d-section{margin-bottom:1.75rem}
+.d-section-title{
+  font-family:var(--font-head);font-size:0.55rem;letter-spacing:0.2em;
+  color:var(--accent2);text-transform:uppercase;margin-bottom:1rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.d-section-title::after{content:'';flex:1;height:1px;background:var(--border2)}
+.d-row{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem}
+.d-field label{font-family:var(--font-head);font-size:0.5rem;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:0.3rem}
+.d-field .d-val{font-size:0.9rem;color:var(--text)}
+.d-field.full{grid-column:1/-1}
+.desc-box{
+  padding:1rem;
+  background:var(--bg3);border:1px solid rgba(221,238,255,0.07);
+  font-size:0.88rem;color:var(--muted);line-height:1.8;
+  font-family:var(--font-body);
+}
+.drawer-foot{
+  padding:1rem 1.5rem;border-top:1px solid var(--border);
+  display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;
+}
+.status-select{
+  flex:1;background:var(--bg3);border:1px solid var(--border);
+  color:var(--text);padding:0.45rem 0.85rem;
+  font-family:var(--font-head);font-size:0.6rem;letter-spacing:0.1em;
+  text-transform:uppercase;outline:none;cursor:pointer;
+}
+.status-select option{background:var(--bg2);color:var(--text)}
+.btn-save{
+  padding:0.45rem 1.25rem;background:var(--accent);color:var(--bg);
+  border:none;font-family:var(--font-head);font-size:0.6rem;
+  letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;
+}
+.btn-save:hover{background:#00cc6a}
+.btn-del{
+  padding:0.45rem 1rem;background:transparent;
+  border:1px solid var(--accent3);color:var(--accent3);
+  font-family:var(--font-head);font-size:0.6rem;
+  letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;
+}
+.btn-del:hover{background:rgba(255,60,60,0.1)}
+
+/* ── ACTIVITY FEED ── */
+.activity-list{display:flex;flex-direction:column;gap:0}
+.act-item{
+  display:flex;gap:1rem;padding:0.85rem 1.25rem;
+  border-bottom:1px solid rgba(221,238,255,0.04);
+  transition:background 0.15s;cursor:pointer;
+}
+.act-item:hover{background:rgba(0,255,136,0.02)}
+.act-dot-wrap{display:flex;flex-direction:column;align-items:center;gap:0}
+.act-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.act-line{width:1px;flex:1;background:rgba(221,238,255,0.08);margin-top:4px}
+.act-body{flex:1}
+.act-ticket{font-family:var(--font-mono);font-size:0.72rem;color:var(--accent2)}
+.act-msg{font-size:0.84rem;color:var(--text);margin-top:0.15rem}
+.act-time{font-size:0.75rem;color:var(--muted);margin-top:0.15rem}
+
+/* ── MINI CHARTS ── */
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.chart-card{border:1px solid var(--border);background:var(--card);padding:1.25rem}
+.chart-title{font-family:var(--font-head);font-size:0.55rem;letter-spacing:0.18em;color:var(--muted);text-transform:uppercase;margin-bottom:1rem}
+.bar-chart{display:flex;flex-direction:column;gap:0.6rem}
+.bar-item{display:flex;align-items:center;gap:0.75rem;font-size:0.8rem}
+.bar-label{min-width:120px;color:var(--muted);font-size:0.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;height:6px;background:rgba(221,238,255,0.06);border-radius:0;overflow:hidden}
+.bar-fill{height:100%;border-radius:0;transition:width 0.6s ease;background:var(--accent)}
+.bar-count{min-width:24px;text-align:right;font-family:var(--font-mono);font-size:0.72rem;color:var(--muted)}
+.donut-wrap{display:flex;gap:1rem;align-items:center}
+.donut-legend{display:flex;flex-direction:column;gap:0.5rem;flex:1}
+.legend-item{display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:var(--muted)}
+.legend-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:2rem;right:2rem;z-index:500;
+  padding:0.85rem 1.5rem;
+  background:var(--card2);border:1px solid var(--border);
+  font-family:var(--font-head);font-size:0.6rem;letter-spacing:0.12em;
+  color:var(--accent);text-transform:uppercase;
+  transform:translateY(20px);opacity:0;transition:all 0.3s;
+  pointer-events:none;
+}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.error{color:var(--accent3);border-color:var(--border3)}
+
+/* ── EXPORT MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(2,11,15,0.75);z-index:300;display:none;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);padding:2rem;min-width:360px;max-width:90vw}
+.modal h3{font-family:var(--font-head);font-size:0.75rem;letter-spacing:0.15em;color:var(--accent);text-transform:uppercase;margin-bottom:1rem}
+.modal p{font-size:0.88rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.7}
+.modal-btns{display:flex;gap:0.75rem;justify-content:flex-end}
+
+/* ── URL CHIP ── */
+.url-chip{
+  font-family:var(--font-mono);font-size:0.75rem;
+  color:var(--accent2);word-break:break-all;
+  background:var(--bg3);padding:0.4rem 0.75rem;
+  border-left:2px solid var(--accent2);
+  display:block;margin-top:0.25rem;
+}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:4rem 2rem}
+.empty-state .es-icon{font-size:2.5rem;margin-bottom:1rem;display:block;opacity:0.4}
+.empty-state h3{font-family:var(--font-head);font-size:0.68rem;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;margin-bottom:0.5rem}
+.empty-state p{font-size:0.85rem;color:var(--muted);opacity:0.7}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .sidebar{width:56px;min-width:56px}
+  .sb-logo-text,.sb-badge,.sb-section,.sb-nav li a span:not(.icon),.sb-status span:last-child{display:none}
+  .sb-nav li a{justify-content:center;padding:0.75rem}
+  .chart-row{grid-template-columns:1fr}
+  .d-row{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .content{padding:1rem}
+  .topbar{padding:0 1rem}
+  .topbar-search{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" role="navigation" aria-label="Admin navigation">
+    <div class="sb-logo">
+      <svg class="logo-svg" width="32" height="32" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+        <polygon points="18,2 34,10 34,26 18,34 2,26 2,10" stroke="#00ff88" stroke-width="1.5" fill="rgba(0,255,136,0.06)"/>
+        <text x="18" y="22" text-anchor="middle" font-family="Orbitron" font-size="9" font-weight="900" fill="#00ff88">SX</text>
+      </svg>
+      <span class="sb-logo-text">SECURE<span>X</span></span>
+    </div>
+    <div class="sb-badge">Admin Panel</div>
+    <p class="sb-section">Main</p>
+    <ul class="sb-nav">
+      <li><a class="active" onclick="setView('dashboard')"><span class="icon">⬛</span><span>Dashboard</span></a></li>
+      <li><a onclick="setView('reports')"><span class="icon">📋</span><span>Incident Reports</span></a></li>
+      <li><a onclick="setView('activity')"><span class="icon">⚡</span><span>Activity Feed</span></a></li>
+    </ul>
+    <div class="sb-divider"></div>
+    <p class="sb-section">Data</p>
+    <ul class="sb-nav">
+      <li><a onclick="openExport()"><span class="icon">⬇</span><span>Export CSV</span></a></li>
+      <li><a onclick="seedDemoData()"><span class="icon">🔁</span><span>Load Demo Data</span></a></li>
+      <li><a onclick="confirmClear()" style="color:rgba(255,60,60,0.6)"><span class="icon" style="color:rgba(255,60,60,0.6)">🗑</span><span>Clear All Data</span></a></li>
+    </ul>
+    <div class="sb-status">
+      <span class="dot"></span><span>All Systems Live</span>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- TOPBAR -->
+    <header class="topbar" role="banner">
+      <div class="topbar-title">SecureX <span>/ Admin</span></div>
+      <div class="topbar-search" role="search">
+        <span class="s-icon" aria-hidden="true">🔍</span>
+        <input type="text" id="global-search" placeholder="Search tickets, names, types…" aria-label="Search reports" oninput="onSearch()"/>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn-sm" onclick="refreshData()" aria-label="Refresh data">↻ Refresh</button>
+        <button class="btn-sm primary" onclick="openExport()" aria-label="Export data">⬇ Export</button>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="content" role="main" id="main-content">
+
+      <!-- ════════════ DASHBOARD VIEW ════════════ -->
+      <div id="view-dashboard">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+          <div>
+            <div style="font-family:var(--font-head);font-size:0.55rem;letter-spacing:0.2em;color:var(--accent2);text-transform:uppercase;margin-bottom:0.3rem">// Overview</div>
+            <h1 style="font-family:var(--font-head);font-size:1.4rem;font-weight:900;color:var(--text)">Incident <span style="color:var(--accent)">Dashboard</span></h1>
+          </div>
+          <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--muted)" id="last-updated">—</div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-row" id="stats-row">
+          <div class="stat-card">
+            <div class="sc-label">Total Reports</div>
+            <div class="sc-num" id="s-total">0</div>
+            <div class="sc-sub">All time submissions</div>
+          </div>
+          <div class="stat-card sc-red">
+            <div class="sc-label">Critical / High</div>
+            <div class="sc-num" id="s-critical">0</div>
+            <div class="sc-sub">Needs immediate attention</div>
+          </div>
+          <div class="stat-card sc-yellow">
+            <div class="sc-label">Open / Investigating</div>
+            <div class="sc-num" id="s-open">0</div>
+            <div class="sc-sub">Pending resolution</div>
+          </div>
+          <div class="stat-card sc-blue">
+            <div class="sc-label">Resolved</div>
+            <div class="sc-num" id="s-resolved">0</div>
+            <div class="sc-sub">Successfully closed</div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-label">This Week</div>
+            <div class="sc-num" id="s-week">0</div>
+            <div class="sc-sub">New reports (7 days)</div>
+          </div>
+        </div>
+
+        <!-- CHARTS -->
+        <div class="chart-row">
+          <div class="chart-card">
+            <div class="chart-title">Incidents by Type</div>
+            <div class="bar-chart" id="chart-type"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Status Distribution</div>
+            <div class="donut-wrap">
+              <canvas id="donut-canvas" width="120" height="120" aria-label="Status donut chart" role="img"></canvas>
+              <div class="donut-legend" id="donut-legend"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECENT INCIDENTS TABLE (preview) -->
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">Recent Incidents <span>(Latest 5)</span></span>
+            <button class="btn-sm" onclick="setView('reports')">View All →</button>
+          </div>
+          <div class="table-wrap">
+            <table id="recent-table" aria-label="Recent incident reports">
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Reporter</th>
+                  <th>Incident Type</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Submitted</th>
+                </tr>
+              </thead>
+              <tbody id="recent-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════ REPORTS VIEW ════════════ -->
+      <div id="view-reports" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+          <div>
+            <div style="font-family:var(--font-head);font-size:0.55rem;letter-spacing:0.2em;color:var(--accent2);text-transform:uppercase;margin-bottom:0.3rem">// All Reports</div>
+            <h1 style="font-family:var(--font-head);font-size:1.4rem;font-weight:900;color:var(--text)">Incident <span style="color:var(--accent)">Reports</span></h1>
+          </div>
+          <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--muted)" id="report-count-label">0 records</span>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">Filter & Sort</span>
+            <div class="filter-row">
+              <select class="filter-select" id="filter-priority" onchange="applyFilters()" aria-label="Filter by priority">
+                <option value="">All Priorities</option>
+                <option value="critical">Critical</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+              <select class="filter-select" id="filter-status" onchange="applyFilters()" aria-label="Filter by status">
+                <option value="">All Statuses</option>
+                <option value="open">Open</option>
+                <option value="investigating">Investigating</option>
+                <option value="resolved">Resolved</option>
+                <option value="closed">Closed</option>
+              </select>
+              <select class="filter-select" id="filter-type" onchange="applyFilters()" aria-label="Filter by type">
+                <option value="">All Types</option>
+                <option>Phishing / Fake Website</option>
+                <option>Financial Fraud / Scam</option>
+                <option>Ransomware Attack</option>
+                <option>Account Hacked</option>
+                <option>Data Breach</option>
+                <option>Online Harassment / Cyberbullying</option>
+                <option>Malware / Virus Infection</option>
+                <option>Identity Theft</option>
+                <option>Unauthorized Access</option>
+                <option>Other</option>
+              </select>
+              <select class="filter-select" id="filter-state" onchange="applyFilters()" aria-label="Filter by state">
+                <option value="">All States</option>
+                <option>Kerala</option>
+                <option>Tamil Nadu</option>
+                <option>Karnataka</option>
+                <option>Andhra Pradesh</option>
+                <option>Maharashtra</option>
+                <option>Delhi</option>
+                <option>West Bengal</option>
+                <option>Gujarat</option>
+                <option>Other</option>
+              </select>
+              <button class="btn-sm" onclick="clearFilters()">✕ Clear</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table id="reports-table" aria-label="All incident reports">
+              <thead>
+                <tr>
+                  <th onclick="sortBy('ticket')" id="th-ticket">Ticket <span class="sort-icon">↕</span></th>
+                  <th onclick="sortBy('name')" id="th-name">Reporter <span class="sort-icon">↕</span></th>
+                  <th onclick="sortBy('type')" id="th-type">Incident Type <span class="sort-icon">↕</span></th>
+                  <th onclick="sortBy('priority')" id="th-priority">Priority <span class="sort-icon">↕</span></th>
+                  <th onclick="sortBy('status')" id="th-status">Status <span class="sort-icon">↕</span></th>
+                  <th onclick="sortBy('state')" id="th-state">State <span class="sort-icon">↕</span></th>
+                  <th onclick="sortBy('date')" id="th-date">Inc. Date <span class="sort-icon">↕</span></th>
+                  <th onclick="sortBy('submitted')" id="th-submitted">Submitted <span class="sort-icon">↕</span></th>
+                </tr>
+              </thead>
+              <tbody id="reports-tbody"></tbody>
+            </table>
+          </div>
+          <div class="pagination" id="pagination-bar" role="navigation" aria-label="Table pagination"></div>
+        </div>
+      </div>
+
+      <!-- ════════════ ACTIVITY VIEW ════════════ -->
+      <div id="view-activity" style="display:none">
+        <div style="margin-bottom:1.5rem">
+          <div style="font-family:var(--font-head);font-size:0.55rem;letter-spacing:0.2em;color:var(--accent2);text-transform:uppercase;margin-bottom:0.3rem">// Timeline</div>
+          <h1 style="font-family:var(--font-head);font-size:1.4rem;font-weight:900;color:var(--text)">Activity <span style="color:var(--accent)">Feed</span></h1>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">All Submissions — Chronological</span></div>
+          <div class="activity-list" id="activity-list"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- DETAIL DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()" role="dialog" aria-modal="true" aria-label="Incident detail"></div>
+<div class="drawer" id="detail-drawer">
+  <div class="drawer-head">
+    <span class="drawer-ticket" id="d-ticket">—</span>
+    <span id="d-priority-badge"></span>
+    <button class="drawer-close" onclick="closeDrawer()" aria-label="Close detail panel">✕ Close</button>
+  </div>
+  <div class="drawer-body">
+    <div class="d-section">
+      <div class="d-section-title">Reporter Information</div>
+      <div class="d-row">
+        <div class="d-field"><label>Full Name</label><div class="d-val" id="d-name">—</div></div>
+        <div class="d-field"><label>Email</label><div class="d-val" id="d-email" style="word-break:break-all">—</div></div>
+        <div class="d-field"><label>Phone</label><div class="d-val" id="d-phone">—</div></div>
+        <div class="d-field"><label>State / Region</label><div class="d-val" id="d-state">—</div></div>
+      </div>
+    </div>
+    <div class="d-section">
+      <div class="d-section-title">Incident Details</div>
+      <div class="d-row">
+        <div class="d-field"><label>Type</label><div class="d-val" id="d-type">—</div></div>
+        <div class="d-field"><label>Date of Incident</label><div class="d-val" id="d-inc-date">—</div></div>
+        <div class="d-field"><label>Financial Loss</label><div class="d-val" id="d-loss">—</div></div>
+        <div class="d-field"><label>Notify via Email</label><div class="d-val" id="d-notify">—</div></div>
+        <div class="d-field full"><label>Suspicious URL</label><div id="d-url">—</div></div>
+        <div class="d-field full"><label>Description</label><div class="desc-box" id="d-desc">—</div></div>
+      </div>
+    </div>
+    <div class="d-section">
+      <div class="d-section-title">Submission Meta</div>
+      <div class="d-row">
+        <div class="d-field"><label>Submitted At</label><div class="d-val" id="d-submitted">—</div></div>
+        <div class="d-field"><label>Current Status</label><div id="d-status-badge"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <select class="status-select" id="d-status-select" aria-label="Update report status">
+      <option value="open">Open</option>
+      <option value="investigating">Investigating</option>
+      <option value="resolved">Resolved</option>
+      <option value="closed">Closed</option>
+    </select>
+    <button class="btn-save" onclick="saveStatus()" aria-label="Save status">Save Status</button>
+    <button class="btn-del" onclick="deleteReport()" aria-label="Delete report">🗑 Delete</button>
+  </div>
+</div>
+
+<!-- EXPORT MODAL -->
+<div class="modal-overlay" id="export-modal" role="dialog" aria-modal="true" aria-label="Export data">
+  <div class="modal">
+    <h3>Export Incident Data</h3>
+    <p>Download all incident reports as a CSV file. The export will include all fields including reporter details, incident type, priority, status, and description.</p>
+    <div class="modal-btns">
+      <button class="btn-sm" onclick="closeExport()">Cancel</button>
+      <button class="btn-sm primary" onclick="doExport()">⬇ Download CSV</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  DATA STORE  —  localStorage key: sx_reports
+// ═══════════════════════════════════════════════
+const STORE_KEY = 'sx_reports';
+
+function loadReports(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEY)||'[]'); }
+  catch(e){ return []; }
+}
+function saveReports(arr){
+  localStorage.setItem(STORE_KEY, JSON.stringify(arr));
+}
+
+// Expose submitReport globally so the main site's form can call it
+// (inject this snippet into secure_x.html's submitReport function)
+window.sxSubmitReport = function(data){
+  const reports = loadReports();
+  reports.unshift(data);
+  saveReports(reports);
+};
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let allReports = [];
+let filtered   = [];
+let sortField  = 'submitted';
+let sortDir    = -1; // -1 = desc
+let currentPage = 1;
+const PAGE_SIZE = 10;
+let activeDrawerTicket = null;
+let searchQuery = '';
+
+// ═══════════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', ()=>{
+  allReports = loadReports();
+  if(allReports.length === 0) seedDemoData();
+  else renderAll();
+  updateLastUpdated();
+});
+
+function refreshData(){
+  allReports = loadReports();
+  renderAll();
+  updateLastUpdated();
+  showToast('Data refreshed');
+}
+
+function updateLastUpdated(){
+  const el = document.getElementById('last-updated');
+  if(el) el.textContent = 'Last updated: '+new Date().toLocaleTimeString();
+}
+
+// ═══════════════════════════════════════════════
+//  VIEW ROUTING
+// ═══════════════════════════════════════════════
+function setView(name){
+  ['dashboard','reports','activity'].forEach(v=>{
+    document.getElementById('view-'+v).style.display = (v===name)?'':'none';
+  });
+  document.querySelectorAll('.sb-nav a').forEach(a=>a.classList.remove('active'));
+  const map = {dashboard:0, reports:1, activity:2};
+  document.querySelectorAll('.sb-nav a')[map[name]]?.classList.add('active');
+  if(name==='reports') renderReports();
+  if(name==='activity') renderActivity();
+  if(name==='dashboard') renderDashboard();
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER ALL
+// ═══════════════════════════════════════════════
+function renderAll(){
+  renderDashboard();
+}
+
+// ═══════════════════════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════════════════════
+function renderDashboard(){
+  const r = allReports;
+  document.getElementById('s-total').textContent = r.length;
+  document.getElementById('s-critical').textContent = r.filter(x=>['critical','high'].includes(x.priority)).length;
+  document.getElementById('s-open').textContent = r.filter(x=>['open','investigating'].includes(x.status||'open')).length;
+  document.getElementById('s-resolved').textContent = r.filter(x=>['resolved','closed'].includes(x.status||'open')).length;
+  const now = Date.now(); const week = 7*24*3600*1000;
+  document.getElementById('s-week').textContent = r.filter(x=>(now - new Date(x.submittedAt).getTime()) < week).length;
+
+  renderTypeChart();
+  renderDonut();
+  renderRecentTable();
+}
+
+function renderTypeChart(){
+  const counts = {};
+  allReports.forEach(r=>{ counts[r.type] = (counts[r.type]||0)+1; });
+  const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const max = sorted[0]?.[1]||1;
+  const container = document.getElementById('chart-type');
+  container.innerHTML = sorted.length ? sorted.map(([type,cnt])=>`
+    <div class="bar-item">
+      <div class="bar-label" title="${type}">${type}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(cnt/max*100).toFixed(1)}%"></div></div>
+      <div class="bar-count">${cnt}</div>
+    </div>`).join('') : '<div style="color:var(--muted);font-size:0.82rem">No data yet</div>';
+}
+
+function renderDonut(){
+  const statuses = ['open','investigating','resolved','closed'];
+  const colors = ['#00cfff','#ffc83c','#00ff88','#6a8fa8'];
+  const labels = ['Open','Investigating','Resolved','Closed'];
+  const counts = statuses.map(s=>allReports.filter(r=>(r.status||'open')===s).length);
+  const total = counts.reduce((a,b)=>a+b,0)||1;
+
+  const canvas = document.getElementById('donut-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,120,120);
+  let start = -Math.PI/2;
+  counts.forEach((c,i)=>{
+    const slice = (c/total)*Math.PI*2;
+    ctx.beginPath();
+    ctx.moveTo(60,60);
+    ctx.arc(60,60,50,start,start+slice);
+    ctx.closePath();
+    ctx.fillStyle = colors[i];
+    ctx.fill();
+    start += slice;
+  });
+  // inner hole
+  ctx.beginPath();
+  ctx.arc(60,60,28,0,Math.PI*2);
+  ctx.fillStyle = '#041018';
+  ctx.fill();
+  ctx.font = 'bold 16px Orbitron,monospace';
+  ctx.fillStyle = '#ddeeff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(total, 60, 60);
+
+  document.getElementById('donut-legend').innerHTML = statuses.map((s,i)=>`
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${colors[i]}"></div>
+      ${labels[i]}: <strong style="color:${colors[i]};margin-left:auto">${counts[i]}</strong>
+    </div>`).join('');
+}
+
+function renderRecentTable(){
+  const recent = [...allReports].sort((a,b)=>new Date(b.submittedAt)-new Date(a.submittedAt)).slice(0,5);
+  const tbody = document.getElementById('recent-tbody');
+  tbody.innerHTML = recent.length ? recent.map(r=>rowHTML(r)).join('') : `<tr><td colspan="6" class="no-data">No reports yet</td></tr>`;
+  tbody.querySelectorAll('tr[data-ticket]').forEach(tr=>{
+    tr.onclick = ()=>openDrawer(tr.dataset.ticket);
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  REPORTS TABLE
+// ═══════════════════════════════════════════════
+function applyFilters(){
+  const q = searchQuery.toLowerCase();
+  const pri = document.getElementById('filter-priority').value;
+  const sta = document.getElementById('filter-status').value;
+  const typ = document.getElementById('filter-type').value;
+  const stt = document.getElementById('filter-state').value;
+
+  filtered = allReports.filter(r=>{
+    if(q && !`${r.ticket} ${r.name} ${r.email} ${r.type} ${r.state} ${r.description}`.toLowerCase().includes(q)) return false;
+    if(pri && r.priority !== pri) return false;
+    if(sta && (r.status||'open') !== sta) return false;
+    if(typ && r.type !== typ) return false;
+    if(stt && r.state !== stt) return false;
+    return true;
+  });
+
+  // sort
+  const prioOrder = {critical:4,high:3,medium:2,low:1};
+  filtered.sort((a,b)=>{
+    let av = a[sortField], bv = b[sortField];
+    if(sortField==='priority'){ av=prioOrder[av]||0; bv=prioOrder[bv]||0; }
+    if(sortField==='submitted') { av=new Date(a.submittedAt); bv=new Date(b.submittedAt); }
+    if(av < bv) return -1*sortDir;
+    if(av > bv) return 1*sortDir;
+    return 0;
+  });
+
+  currentPage = 1;
+  renderReportsPage();
+}
+
+function clearFilters(){
+  ['filter-priority','filter-status','filter-type','filter-state'].forEach(id=>{
+    document.getElementById(id).value='';
+  });
+  document.getElementById('global-search').value='';
+  searchQuery='';
+  applyFilters();
+}
+
+function onSearch(){
+  searchQuery = document.getElementById('global-search').value;
+  applyFilters();
+}
+
+function sortBy(field){
+  if(sortField===field) sortDir*=-1;
+  else{ sortField=field; sortDir=-1; }
+  document.querySelectorAll('thead th').forEach(th=>th.classList.remove('sorted'));
+  const th = document.getElementById('th-'+field);
+  if(th) th.classList.add('sorted');
+  applyFilters();
+}
+
+function renderReports(){
+  allReports = loadReports();
+  applyFilters();
+}
+
+function renderReportsPage(){
+  const total = filtered.length;
+  const pages = Math.ceil(total/PAGE_SIZE)||1;
+  const start = (currentPage-1)*PAGE_SIZE;
+  const page = filtered.slice(start, start+PAGE_SIZE);
+
+  document.getElementById('report-count-label').textContent = `${total} record${total!==1?'s':''}`;
+
+  const tbody = document.getElementById('reports-tbody');
+  tbody.innerHTML = page.length ? page.map(r=>rowHTML(r)).join('') :
+    `<tr><td colspan="8"><div class="empty-state"><span class="es-icon">📭</span><h3>No Reports Found</h3><p>Try adjusting your filters or load demo data.</p></div></td></tr>`;
+  tbody.querySelectorAll('tr[data-ticket]').forEach(tr=>{
+    tr.onclick = ()=>openDrawer(tr.dataset.ticket);
+  });
+
+  // pagination
+  const pbar = document.getElementById('pagination-bar');
+  let html = `<span class="pg-info">Showing ${page.length?start+1:0}–${Math.min(start+PAGE_SIZE,total)} of ${total}</span>`;
+  html += `<button class="pg-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹ Prev</button>`;
+  const maxBtns = 5;
+  let p1 = Math.max(1, currentPage-2), p2 = Math.min(pages, p1+maxBtns-1);
+  p1 = Math.max(1, p2-maxBtns+1);
+  for(let p=p1;p<=p2;p++){
+    html += `<button class="pg-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+  }
+  html += `<button class="pg-btn" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>Next ›</button>`;
+  pbar.innerHTML = html;
+}
+
+function goPage(p){
+  const pages = Math.ceil(filtered.length/PAGE_SIZE)||1;
+  currentPage = Math.min(Math.max(1,p), pages);
+  renderReportsPage();
+}
+
+// Row HTML (shared between recent + reports table)
+function rowHTML(r){
+  const typeColor = typeToColor(r.type);
+  return `<tr data-ticket="${r.ticket}" tabindex="0" onkeydown="if(event.key==='Enter')openDrawer('${r.ticket}')">
+    <td class="mono">#${r.ticket}</td>
+    <td>${esc(r.name)}</td>
+    <td><div class="type-chip"><div class="type-dot" style="background:${typeColor}"></div>${esc(r.type)}</div></td>
+    <td><span class="badge badge-${r.priority}">${r.priority}</span></td>
+    <td><span class="badge badge-${r.status||'open'}">${r.status||'open'}</span></td>
+    <td>${r.state||'—'}</td>
+    <td>${r.date||'—'}</td>
+    <td>${fmtDate(r.submittedAt)}</td>
+  </tr>`;
+}
+
+// ═══════════════════════════════════════════════
+//  ACTIVITY FEED
+// ═══════════════════════════════════════════════
+function renderActivity(){
+  allReports = loadReports();
+  const sorted = [...allReports].sort((a,b)=>new Date(b.submittedAt)-new Date(a.submittedAt));
+  const container = document.getElementById('activity-list');
+  if(!sorted.length){
+    container.innerHTML = `<div class="empty-state"><span class="es-icon">📡</span><h3>No Activity Yet</h3><p>Reports will appear here as they are submitted.</p></div>`;
+    return;
+  }
+  container.innerHTML = sorted.map((r,i)=>`
+    <div class="act-item" onclick="openDrawer('${r.ticket}')" tabindex="0">
+      <div class="act-dot-wrap">
+        <div class="act-dot" style="background:${prioColor(r.priority)}"></div>
+        ${i<sorted.length-1?'<div class="act-line"></div>':''}
+      </div>
+      <div class="act-body">
+        <div class="act-ticket">#${r.ticket}</div>
+        <div class="act-msg"><strong>${esc(r.name)}</strong> reported a <em>${esc(r.type)}</em> — <span class="badge badge-${r.priority}" style="font-size:0.48rem">${r.priority}</span></div>
+        <div class="act-time">${new Date(r.submittedAt).toLocaleString()} · ${r.state}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  DRAWER
+// ═══════════════════════════════════════════════
+function openDrawer(ticket){
+  const r = allReports.find(x=>x.ticket===ticket);
+  if(!r) return;
+  activeDrawerTicket = ticket;
+
+  document.getElementById('d-ticket').textContent = '#' + r.ticket;
+  document.getElementById('d-priority-badge').innerHTML = `<span class="badge badge-${r.priority}">${r.priority}</span>`;
+  document.getElementById('d-name').textContent = r.name||'—';
+  document.getElementById('d-email').textContent = r.email||'—';
+  document.getElementById('d-phone').textContent = r.phone||'—';
+  document.getElementById('d-state').textContent = r.state||'—';
+  document.getElementById('d-type').textContent = r.type||'—';
+  document.getElementById('d-inc-date').textContent = r.date||'—';
+  document.getElementById('d-loss').textContent = r.loss||'None reported';
+  document.getElementById('d-notify').textContent = r.notify ? 'Yes' : 'No';
+  document.getElementById('d-url').innerHTML = r.url
+    ? `<a class="url-chip" href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">${esc(r.url)}</a>`
+    : '<span style="color:var(--muted);font-size:0.85rem">None provided</span>';
+  document.getElementById('d-desc').textContent = r.description||'—';
+  document.getElementById('d-submitted').textContent = new Date(r.submittedAt).toLocaleString();
+  document.getElementById('d-status-badge').innerHTML = `<span class="badge badge-${r.status||'open'}">${r.status||'open'}</span>`;
+  document.getElementById('d-status-select').value = r.status||'open';
+
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('detail-drawer').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('detail-drawer').classList.remove('open');
+  document.body.style.overflow='';
+  activeDrawerTicket=null;
+}
+
+function saveStatus(){
+  if(!activeDrawerTicket) return;
+  const newStatus = document.getElementById('d-status-select').value;
+  const reports = loadReports();
+  const idx = reports.findIndex(r=>r.ticket===activeDrawerTicket);
+  if(idx===-1) return;
+  reports[idx].status = newStatus;
+  saveReports(reports);
+  allReports = reports;
+  document.getElementById('d-status-badge').innerHTML = `<span class="badge badge-${newStatus}">${newStatus}</span>`;
+  renderDashboard();
+  if(document.getElementById('view-reports').style.display!=='none') renderReports();
+  showToast('Status updated → '+newStatus);
+}
+
+function deleteReport(){
+  if(!activeDrawerTicket) return;
+  if(!confirm('Delete report #'+activeDrawerTicket+'? This cannot be undone.')) return;
+  const reports = loadReports().filter(r=>r.ticket!==activeDrawerTicket);
+  saveReports(reports);
+  allReports = reports;
+  closeDrawer();
+  renderDashboard();
+  if(document.getElementById('view-reports').style.display!=='none') renderReports();
+  showToast('Report deleted', true);
+}
+
+// ═══════════════════════════════════════════════
+//  EXPORT CSV
+// ═══════════════════════════════════════════════
+function openExport(){
+  document.getElementById('export-modal').classList.add('open');
+}
+function closeExport(){
+  document.getElementById('export-modal').classList.remove('open');
+}
+function doExport(){
+  const reports = loadReports();
+  if(!reports.length){ showToast('No data to export', true); closeExport(); return; }
+  const headers = ['Ticket','Name','Email','Phone','State','Type','Date','Priority','Status','Financial Loss','URL','Notify','Description','Submitted At'];
+  const rows = reports.map(r=>[
+    r.ticket, r.name, r.email, r.phone||'', r.state, r.type, r.date||'',
+    r.priority, r.status||'open', r.loss||'', r.url||'', r.notify?'Yes':'No',
+    (r.description||'').replace(/"/g,"'"),
+    r.submittedAt
+  ].map(v=>`"${v}"`).join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download='securex_incidents_'+Date.now()+'.csv';
+  a.click(); URL.revokeObjectURL(url);
+  closeExport();
+  showToast('CSV downloaded');
+}
+
+// ═══════════════════════════════════════════════
+//  DEMO DATA
+// ═══════════════════════════════════════════════
+function seedDemoData(){
+  const demo = [
+    {ticket:'SX-001',name:'Meera Pillai',email:'meera@example.com',phone:'+91 98765 43210',state:'Kerala',type:'Phishing / Fake Website',date:'2025-04-01',priority:'high',status:'investigating',url:'http://fake-sbi-login.xyz',description:'Received an email claiming to be from SBI Bank asking me to verify my account by clicking a link. The link led to a fake login page.',loss:'',notify:true,submittedAt:'2025-04-01T08:23:11Z'},
+    {ticket:'SX-002',name:'Arjun Nambiar',email:'arjun@mailbox.in',phone:'',state:'Kerala',type:'Financial Fraud / Scam',date:'2025-04-02',priority:'critical',status:'open',url:'',description:'I received a call from someone claiming to be from TRAI saying my phone number would be disconnected. They asked for my Aadhaar number and then transferred ₹45,000 from my account.',loss:'₹45,000 via UPI',notify:false,submittedAt:'2025-04-02T14:05:33Z'},
+    {ticket:'SX-003',name:'Divya Krishnaswamy',email:'divya.k@gmail.com',phone:'+91 77889 90011',state:'Tamil Nadu',type:'Ransomware Attack',date:'2025-03-28',priority:'critical',status:'resolved',url:'',description:'All files on our office server were encrypted overnight. A ransom note in Bitcoin was left. We have backups so we did not pay.',loss:'',notify:true,submittedAt:'2025-03-29T09:11:22Z'},
+    {ticket:'SX-004',name:'Rohan Mehta',email:'rohan.mehta@startup.io',phone:'+91 99001 12233',state:'Maharashtra',type:'Data Breach',date:'2025-03-30',priority:'high',status:'investigating',url:'',description:'Our customer database may have been accessed by an unauthorized party. We noticed unusual API access patterns in our logs.',loss:'',notify:true,submittedAt:'2025-03-30T18:45:00Z'},
+    {ticket:'SX-005',name:'Sneha Iyer',email:'sneha.iyer@outlook.com',phone:'',state:'Karnataka',type:'Account Hacked',date:'2025-04-03',priority:'medium',status:'open',url:'',description:'My Instagram account was hacked. The attacker changed my email and phone number and is now posting scam content to my followers.',loss:'',notify:true,submittedAt:'2025-04-03T10:30:45Z'},
+    {ticket:'SX-006',name:'Vijay Anand',email:'vijay@techcorp.in',phone:'+91 88776 65544',state:'Andhra Pradesh',type:'Malware / Virus Infection',date:'2025-03-25',priority:'medium',status:'resolved',url:'http://cracked-software.net/download',description:'Downloaded what I thought was a free design tool from a site. Soon after, my browser started showing ads everywhere and my computer became very slow.',loss:'',notify:false,submittedAt:'2025-03-26T07:20:10Z'},
+    {ticket:'SX-007',name:'Priya Thomas',email:'priya.thomas@kochi.edu',phone:'+91 94455 66778',state:'Kerala',type:'Online Harassment / Cyberbullying',date:'2025-04-04',priority:'low',status:'open',url:'',description:'I am receiving threatening and abusive messages from anonymous accounts on multiple platforms. The same person seems to be running several accounts.',loss:'',notify:true,submittedAt:'2025-04-04T16:02:55Z'},
+    {ticket:'SX-008',name:'Ravi Sharma',email:'ravisharma@delhimail.com',phone:'+91 98112 34567',state:'Delhi',type:'Identity Theft',date:'2025-03-20',priority:'high',status:'closed',url:'',description:'Someone has opened a credit card in my name using my PAN and Aadhaar details. I received a statement for purchases I never made.',loss:'₹1,20,000 fraudulent charges',notify:true,submittedAt:'2025-03-21T11:55:30Z'},
+    {ticket:'SX-009',name:'Lakshmi Nair',email:'lnair@privateinbox.com',phone:'',state:'Kerala',type:'Unauthorized Access',date:'2025-04-05',priority:'medium',status:'investigating',url:'',description:'I noticed login alerts from IP addresses in Russia and China on my email account. I have enabled 2FA now but I am worried my emails were read.',loss:'',notify:false,submittedAt:'2025-04-05T08:40:20Z'},
+    {ticket:'SX-010',name:'Suresh Babu',email:'sureshbabu@company.co',phone:'+91 95544 33221',state:'Tamil Nadu',type:'Phishing / Fake Website',date:'2025-04-06',priority:'low',status:'resolved',url:'http://hdfc-verify.webflow.io',description:'A colleague clicked on a link in an email that looked like it came from our HR department. It asked for their Office 365 credentials. We reset the password immediately.',loss:'',notify:true,submittedAt:'2025-04-06T13:15:44Z'},
+    {ticket:'SX-011',name:'Ananya Gupta',email:'ananya@bengaluru.net',phone:'+91 70011 22334',state:'Karnataka',type:'Financial Fraud / Scam',date:'2025-04-07',priority:'critical',status:'open',url:'',description:'Got a WhatsApp message offering a part-time job. I was asked to like YouTube videos for money. First few tasks paid, then they asked me to invest ₹30,000 to unlock bigger tasks. I lost everything.',loss:'₹30,000 via NEFT',notify:true,submittedAt:'2025-04-07T20:05:00Z'},
+    {ticket:'SX-012',name:'Kiran Kumar',email:'kirankumar@mailme.in',phone:'',state:'West Bengal',type:'Other',date:'2025-04-07',priority:'low',status:'open',url:'',description:'I keep receiving OTPs on my phone for accounts I never created. I suspect someone is using my number to register on various platforms.',loss:'',notify:false,submittedAt:'2025-04-07T22:30:11Z'},
+  ];
+  saveReports(demo);
+  allReports = demo;
+  renderAll();
+  showToast('Demo data loaded — ' + demo.length + ' reports');
+}
+
+function confirmClear(){
+  if(confirm('Delete ALL incident reports? This cannot be undone.')) {
+    saveReports([]);
+    allReports = [];
+    renderAll();
+    if(document.getElementById('view-reports').style.display!=='none') renderReports();
+    showToast('All data cleared', true);
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════
+function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+function fmtDate(iso){ try{ return new Date(iso).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }catch(e){ return iso||'—'; } }
+
+function prioColor(p){
+  return {critical:'#ff3c3c',high:'#ff6b35',medium:'#ffc83c',low:'#00ff88'}[p]||'#6a8fa8';
+}
+function typeToColor(t){
+  const map = {
+    'Phishing / Fake Website':'#00cfff',
+    'Financial Fraud / Scam':'#ffc83c',
+    'Ransomware Attack':'#ff3c3c',
+    'Account Hacked':'#ff6b35',
+    'Data Breach':'#ff3c3c',
+    'Online Harassment / Cyberbullying':'#a78bfa',
+    'Malware / Virus Infection':'#f97316',
+    'Identity Theft':'#e879f9',
+    'Unauthorized Access':'#00ff88',
+  };
+  return map[t]||'#6a8fa8';
+}
+
+function showToast(msg, isError=false){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError?' error':'');
+  clearTimeout(t._to);
+  t._to = setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+// ═══════════════════════════════════════════════
+//  PATCH FOR MAIN SITE INTEGRATION
+//  Add this to secure_x.html's submitReport()
+//  after generating the ticket ID:
+//
+//  const reportData = {
+//    ticket, name, email,
+//    phone: document.getElementById('f-phone').value.trim(),
+//    state, type,
+//    date: document.getElementById('f-date').value,
+//    priority: document.querySelector('.prio-btn.selected')?.textContent.trim().replace(/[^a-z]/gi,'').toLowerCase() || 'high',
+//    status: 'open',
+//    url: document.getElementById('f-url').value.trim(),
+//    description: desc,
+//    loss: document.getElementById('f-loss').value.trim(),
+//    notify: document.getElementById('f-notify').checked,
+//    submittedAt: new Date().toISOString()
+//  };
+//  const stored = JSON.parse(localStorage.getItem('sx_reports')||'[]');
+//  stored.unshift(reportData);
+//  localStorage.setItem('sx_reports', JSON.stringify(stored));
+// ═══════════════════════════════════════════════
+</script>
+</body>
+</html>

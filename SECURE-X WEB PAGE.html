@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SecureX — Digital Security Solutions</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#020b0f;
+  --bg2:#041018;
+  --bg3:#071520;
+  --card:#0a1d2a;
+  --accent:#00ff88;
+  --accent2:#00cfff;
+  --accent3:#ff3c3c;
+  --text:#ddeeff;
+  --muted:#6a8fa8;
+  --border:rgba(0,255,136,0.15);
+  --border2:rgba(0,207,255,0.15);
+  --font-head:'Orbitron',monospace;
+  --font-body:'Rajdhani',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden;cursor:default}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+
+/* PAGE SYSTEM */
+.page{display:none;animation:fadeIn 0.4s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* TICKER */
+.ticker-bar{
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  padding:6px 0;
+  overflow:hidden;
+  position:relative;
+  font-family:var(--font-head);
+  font-size:0.65rem;
+  color:var(--accent);
+  letter-spacing:0.12em;
+}
+.ticker-inner{
+  display:flex;
+  white-space:nowrap;
+  animation:ticker 40s linear infinite;
+  gap:4rem;
+}
+.ticker-inner span{color:var(--accent3);margin-right:1rem}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:999;
+  background:rgba(2,11,15,0.95);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0 2rem;
+  display:flex;align-items:center;gap:0;
+}
+.nav-logo-area{
+  display:flex;align-items:center;gap:10px;
+  padding:1rem 2rem 1rem 0;
+  border-right:1px solid var(--border);
+  margin-right:1.5rem;
+  cursor:pointer;
+  text-decoration:none;
+}
+.logo-svg{width:36px;height:36px}
+.logo-text{
+  font-family:var(--font-head);
+  font-size:1.1rem;
+  font-weight:900;
+  color:var(--accent);
+  letter-spacing:0.08em;
+}
+.logo-text span{color:var(--accent2)}
+.nav-links{
+  display:flex;align-items:center;gap:0;
+  list-style:none;flex:1;
+}
+.nav-links li a{
+  display:block;
+  padding:1.2rem 1.1rem;
+  font-family:var(--font-head);
+  font-size:0.62rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--muted);
+  text-decoration:none;
+  transition:color 0.2s,background 0.2s;
+  position:relative;
+  cursor:pointer;
+}
+.nav-links li a::after{
+  content:'';position:absolute;bottom:0;left:1.1rem;right:1.1rem;height:2px;
+  background:var(--accent);transform:scaleX(0);transition:transform 0.2s;
+}
+.nav-links li a:hover,
+.nav-links li a.active{color:var(--accent)}
+.nav-links li a:hover::after,
+.nav-links li a.active::after{transform:scaleX(1)}
+.nav-report{
+  margin-left:auto;
+  padding:0.55rem 1.25rem;
+  border:1px solid var(--accent3);
+  background:transparent;
+  color:var(--accent3);
+  font-family:var(--font-head);
+  font-size:0.6rem;
+  letter-spacing:0.12em;
+  cursor:pointer;
+  transition:all 0.2s;
+  text-transform:uppercase;
+}
+.nav-report:hover{background:var(--accent3);color:#fff}
+
+/* SHARED SECTION */
+.section-wrap{max-width:1140px;margin:0 auto;padding:5rem 2rem}
+.sec-tag{
+  font-family:var(--font-head);
+  font-size:0.62rem;
+  letter-spacing:0.2em;
+  color:var(--accent2);
+  text-transform:uppercase;
+  margin-bottom:0.6rem;
+  display:flex;align-items:center;gap:0.6rem;
+}
+.sec-tag::before{content:'';width:24px;height:1px;background:var(--accent2)}
+.sec-title{
+  font-family:var(--font-head);
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  font-weight:900;
+  letter-spacing:-0.01em;
+  color:var(--text);
+  line-height:1.1;
+  margin-bottom:1rem;
+}
+.sec-title .hi{color:var(--accent)}
+.sec-sub{font-size:1.05rem;color:var(--muted);max-width:580px;line-height:1.8}
+.divider{height:1px;background:linear-gradient(90deg,var(--accent),transparent);margin:3rem 0;opacity:0.3}
+
+/* ======================== HOME ======================== */
+.hero{
+  min-height:92vh;
+  display:flex;align-items:center;
+  position:relative;overflow:hidden;
+  padding:4rem 2rem;
+}
+canvas#matrix{
+  position:absolute;inset:0;opacity:0.18;pointer-events:none;
+}
+.hero-glow{
+  position:absolute;width:700px;height:700px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(0,255,136,0.06) 0%,transparent 70%);
+  top:50%;left:55%;transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.hero-content{position:relative;z-index:2;max-width:680px;margin-left:5vw}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  border:1px solid var(--border);
+  padding:0.35rem 1rem;
+  font-family:var(--font-head);
+  font-size:0.6rem;
+  letter-spacing:0.15em;
+  color:var(--accent);
+  margin-bottom:2rem;
+  background:rgba(0,255,136,0.04);
+}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:blink 1.5s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+.hero h1{
+  font-family:var(--font-head);
+  font-size:clamp(2.8rem,7vw,5.2rem);
+  font-weight:900;
+  line-height:1.0;
+  letter-spacing:-0.02em;
+  margin-bottom:1.5rem;
+}
+.hero h1 .line-accent{color:var(--accent);display:block}
+.hero h1 .line-dim{color:rgba(221,238,255,0.5);display:block;font-size:0.5em;letter-spacing:0.1em;font-weight:400;margin-bottom:0.3em}
+.hero-desc{font-size:1.1rem;color:var(--muted);margin-bottom:2.5rem;line-height:1.9;max-width:520px}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-g{
+  padding:0.85rem 2rem;
+  background:var(--accent);
+  color:var(--bg);
+  border:none;
+  font-family:var(--font-head);
+  font-size:0.7rem;
+  letter-spacing:0.12em;
+  cursor:pointer;
+  text-transform:uppercase;
+  transition:all 0.2s;
+  text-decoration:none;
+  display:inline-block;
+}
+.btn-g:hover{background:#00cc6a;transform:translateY(-2px)}
+.btn-o{
+  padding:0.85rem 2rem;
+  background:transparent;
+  color:var(--accent2);
+  border:1px solid var(--accent2);
+  font-family:var(--font-head);
+  font-size:0.7rem;
+  letter-spacing:0.12em;
+  cursor:pointer;
+  text-transform:uppercase;
+  transition:all 0.2s;
+  text-decoration:none;
+  display:inline-block;
+}
+.btn-o:hover{background:rgba(0,207,255,0.1);transform:translateY(-2px)}
+
+.hero-stats{
+  margin-top:4rem;
+  display:flex;gap:3rem;flex-wrap:wrap;
+  padding-top:3rem;
+  border-top:1px solid var(--border);
+}
+.hstat-num{
+  font-family:var(--font-head);
+  font-size:2.2rem;
+  color:var(--accent);
+  font-weight:900;
+  display:block;
+}
+.hstat-lbl{font-size:0.78rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase}
+
+/* services strip */
+.services-strip{background:var(--bg2);padding:4rem 2rem;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.services-grid{
+  max-width:1140px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;
+}
+.srv-card{
+  padding:1.75rem;
+  border:1px solid var(--border);
+  background:var(--card);
+  transition:border-color 0.3s,transform 0.3s;
+  position:relative;overflow:hidden;
+}
+.srv-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:var(--accent);transform:scaleX(0);transition:transform 0.3s;transform-origin:left}
+.srv-card:hover::before{transform:scaleX(1)}
+.srv-card:hover{transform:translateY(-4px);border-color:rgba(0,255,136,0.35)}
+.srv-icon{font-size:1.8rem;margin-bottom:1rem;display:block}
+.srv-card h3{font-family:var(--font-head);font-size:0.78rem;letter-spacing:0.1em;color:var(--text);margin-bottom:0.6rem;text-transform:uppercase}
+.srv-card p{font-size:0.88rem;color:var(--muted);line-height:1.7}
+
+/* threat ticker home */
+.threat-monitor{
+  max-width:1140px;margin:3rem auto 0;padding:0 2rem;
+}
+.tm-header{
+  display:flex;align-items:center;gap:1rem;
+  font-family:var(--font-head);font-size:0.65rem;
+  letter-spacing:0.15em;color:var(--accent3);
+  margin-bottom:1rem;text-transform:uppercase;
+}
+.tm-dot{width:8px;height:8px;border-radius:50%;background:var(--accent3);animation:blink 1s infinite}
+.threat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
+.tc{
+  border:1px solid rgba(255,60,60,0.2);
+  background:rgba(255,60,60,0.04);
+  padding:1.25rem 1.5rem;
+  font-size:0.85rem;
+}
+.tc .tc-type{font-family:var(--font-head);font-size:0.58rem;letter-spacing:0.15em;color:var(--accent3);text-transform:uppercase;margin-bottom:0.4rem}
+.tc .tc-msg{color:var(--text);margin-bottom:0.3rem}
+.tc .tc-time{font-size:0.75rem;color:var(--muted)}
+
+/* ======================== COMPANY PROFILE ======================== */
+.cp-hero{
+  background:linear-gradient(135deg,var(--bg2) 0%,var(--bg3) 100%);
+  border-bottom:1px solid var(--border);
+  padding:5rem 2rem;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.cp-hero::before{
+  content:'SECURE X';
+  position:absolute;
+  font-family:var(--font-head);
+  font-size:12rem;
+  font-weight:900;
+  color:rgba(0,255,136,0.025);
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  white-space:nowrap;
+  pointer-events:none;
+}
+.cp-stats-row{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:1.5rem;margin-top:3rem;
+}
+.cp-stat{
+  padding:2rem;
+  border:1px solid var(--border);
+  background:var(--card);
+  text-align:center;
+}
+.cp-stat .num{font-family:var(--font-head);font-size:2.5rem;font-weight:900;color:var(--accent);display:block}
+.cp-stat .lbl{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em}
+.mission-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;margin-top:3rem;
+}
+.mission-box{padding:2rem;border:1px solid var(--border);background:var(--card)}
+.mission-box h3{font-family:var(--font-head);font-size:0.75rem;letter-spacing:0.15em;color:var(--accent2);text-transform:uppercase;margin-bottom:1rem}
+.mission-box p{color:var(--muted);font-size:0.95rem;line-height:1.9}
+.timeline{margin-top:1.5rem}
+.tl-item{display:flex;gap:1.5rem;padding:1rem 0;border-bottom:1px solid var(--border)}
+.tl-year{font-family:var(--font-head);font-size:0.7rem;color:var(--accent);min-width:60px;padding-top:2px;letter-spacing:0.1em}
+.tl-text{font-size:0.9rem;color:var(--muted);line-height:1.7}
+
+/* ======================== ABOUT ======================== */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-top:3rem}
+.about-vis{
+  position:relative;height:380px;
+  display:flex;align-items:center;justify-content:center;
+}
+.hex-ring{
+  width:260px;height:260px;
+  border:1px solid rgba(0,255,136,0.3);
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  animation:hexPulse 4s ease-in-out infinite;
+  background:rgba(0,255,136,0.04);
+}
+@keyframes hexPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,136,0)}50%{box-shadow:0 0 40px 10px rgba(0,255,136,0.08)}}
+.hex-inner{
+  font-family:var(--font-head);
+  font-size:1.8rem;font-weight:900;
+  color:var(--accent);
+  letter-spacing:0.05em;
+  text-align:center;
+  line-height:1.2;
+}
+.hex-inner small{display:block;font-size:0.5rem;color:var(--muted);letter-spacing:0.2em}
+.float-tag{
+  position:absolute;
+  border:1px solid var(--border);
+  background:var(--card);
+  padding:0.5rem 0.9rem;
+  font-family:var(--font-head);
+  font-size:0.58rem;
+  letter-spacing:0.12em;
+  color:var(--accent2);
+  text-transform:uppercase;
+}
+.float-tag:nth-child(2){top:5%;right:5%;animation:floatY 3s ease-in-out infinite}
+.float-tag:nth-child(3){bottom:10%;left:0;animation:floatY 3s ease-in-out infinite 1s}
+.float-tag:nth-child(4){top:45%;left:2%;animation:floatY 3s ease-in-out infinite 2s}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.values-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2rem}
+.val-card{padding:1.25rem;border:1px solid var(--border);background:var(--card)}
+.val-card h4{font-family:var(--font-head);font-size:0.68rem;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;margin-bottom:0.4rem}
+.val-card p{font-size:0.85rem;color:var(--muted);line-height:1.7}
+.team-section{margin-top:5rem}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:2rem}
+.team-card{
+  border:1px solid var(--border);background:var(--card);
+  overflow:hidden;transition:border-color 0.3s,transform 0.3s;
+}
+.team-card:hover{border-color:rgba(0,255,136,0.4);transform:translateY(-4px)}
+.team-avatar{
+  height:120px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-head);font-size:2rem;font-weight:900;
+  letter-spacing:0.05em;
+}
+.ta-g{background:rgba(0,255,136,0.08);color:var(--accent)}
+.ta-b{background:rgba(0,207,255,0.08);color:var(--accent2)}
+.ta-r{background:rgba(255,60,60,0.08);color:var(--accent3)}
+.ta-y{background:rgba(255,200,60,0.08);color:#ffc83c}
+.team-info{padding:1.25rem}
+.team-info h4{font-family:var(--font-head);font-size:0.78rem;letter-spacing:0.08em;color:var(--text);margin-bottom:0.25rem}
+.team-info .role{font-size:0.8rem;color:var(--accent2);margin-bottom:0.5rem}
+.team-info p{font-size:0.82rem;color:var(--muted);line-height:1.6}
+
+/* ======================== AWARENESS ======================== */
+.awareness-hero{
+  background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);
+  padding:5rem 2rem;border-bottom:1px solid var(--border);
+  text-align:center;
+}
+.aw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-top:3rem}
+.aw-card{
+  border:1px solid var(--border);background:var(--card);
+  padding:2rem;position:relative;overflow:hidden;
+  transition:border-color 0.3s,transform 0.3s;
+}
+.aw-card:hover{border-color:rgba(0,255,136,0.35);transform:translateY(-4px)}
+.aw-card .severity{
+  position:absolute;top:1.25rem;right:1.25rem;
+  font-family:var(--font-head);font-size:0.55rem;letter-spacing:0.12em;
+  padding:0.25rem 0.6rem;text-transform:uppercase;
+}
+.sev-high{background:rgba(255,60,60,0.15);color:var(--accent3);border:1px solid rgba(255,60,60,0.3)}
+.sev-med{background:rgba(255,200,60,0.1);color:#ffc83c;border:1px solid rgba(255,200,60,0.25)}
+.sev-low{background:rgba(0,255,136,0.08);color:var(--accent);border:1px solid rgba(0,255,136,0.2)}
+.aw-card .aw-icon{font-size:2.2rem;margin-bottom:1.2rem;display:block}
+.aw-card h3{font-family:var(--font-head);font-size:0.82rem;letter-spacing:0.1em;color:var(--text);text-transform:uppercase;margin-bottom:0.75rem}
+.aw-card p{font-size:0.88rem;color:var(--muted);line-height:1.8}
+.aw-tips{margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border)}
+.aw-tips li{font-size:0.82rem;color:var(--muted);list-style:none;padding:0.2rem 0;display:flex;gap:0.5rem}
+.aw-tips li::before{content:'▸';color:var(--accent);font-size:0.7rem}
+
+/* video section */
+.video-section{
+  background:var(--bg2);
+  padding:5rem 2rem;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.video-wrap{
+  max-width:860px;margin:2.5rem auto 0;
+  border:1px solid var(--border);
+  overflow:hidden;
+  position:relative;
+}
+.video-wrap iframe{
+  width:100%;height:480px;
+  border:none;display:block;
+}
+.video-caption{
+  background:var(--card);
+  padding:1rem 1.5rem;
+  display:flex;align-items:center;gap:1rem;
+}
+.video-caption p{font-size:0.85rem;color:var(--muted)}
+.video-caption strong{font-family:var(--font-head);font-size:0.65rem;color:var(--accent2);letter-spacing:0.1em;text-transform:uppercase}
+
+/* stat banner */
+.stat-banner{
+  background:rgba(0,255,136,0.04);
+  border:1px solid var(--border);
+  padding:2.5rem;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:2rem;text-align:center;
+  margin-top:3rem;
+}
+.sb-num{font-family:var(--font-head);font-size:2rem;color:var(--accent);font-weight:900;display:block}
+.sb-lbl{font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-top:0.25rem}
+
+/* ======================== RESOURCES ======================== */
+.res-intro{text-align:center;margin-bottom:3rem}
+.res-intro .sec-sub{margin:0 auto}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.res-card{border:1px solid var(--border);background:var(--card);padding:2rem}
+.res-card h3{
+  font-family:var(--font-head);font-size:0.72rem;letter-spacing:0.15em;
+  color:var(--accent2);text-transform:uppercase;
+  margin-bottom:1.5rem;padding-bottom:0.75rem;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:0.5rem;
+}
+.res-card h3 span{font-size:1rem}
+
+/* link types */
+.link-list{list-style:none;display:flex;flex-direction:column;gap:0.75rem}
+.link-list li{display:flex;align-items:center;gap:0.75rem}
+.link-type{
+  font-family:var(--font-head);font-size:0.55rem;
+  letter-spacing:0.1em;padding:0.2rem 0.6rem;
+  text-transform:uppercase;min-width:80px;text-align:center;border-radius:0;
+}
+.lt-ext{background:rgba(0,207,255,0.1);color:var(--accent2);border:1px solid rgba(0,207,255,0.25)}
+.lt-doc{background:rgba(0,255,136,0.08);color:var(--accent);border:1px solid rgba(0,255,136,0.2)}
+.lt-tool{background:rgba(255,200,60,0.08);color:#ffc83c;border:1px solid rgba(255,200,60,0.2)}
+.lt-org{background:rgba(255,60,60,0.08);color:var(--accent3);border:1px solid rgba(255,60,60,0.2)}
+.link-list a{
+  color:var(--text);text-decoration:none;font-size:0.9rem;
+  transition:color 0.2s;border-bottom:1px dashed rgba(221,238,255,0.2);
+  padding-bottom:1px;
+}
+.link-list a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* interactive tools */
+.tool-row{display:flex;flex-direction:column;gap:0.75rem}
+.pw-check{display:flex;flex-direction:column;gap:0.5rem}
+.pw-input-row{display:flex;gap:0.5rem}
+.pw-input-row input{
+  flex:1;background:var(--bg3);border:1px solid var(--border);
+  color:var(--text);padding:0.6rem 1rem;font-family:var(--font-body);font-size:0.9rem;
+  outline:none;transition:border-color 0.2s;
+}
+.pw-input-row input:focus{border-color:var(--accent)}
+.pw-input-row button{
+  padding:0.6rem 1.25rem;background:var(--accent);color:var(--bg);border:none;
+  font-family:var(--font-head);font-size:0.6rem;letter-spacing:0.1em;
+  cursor:pointer;text-transform:uppercase;transition:background 0.2s;
+}
+.pw-input-row button:hover{background:#00cc6a}
+.strength-bar{height:4px;background:var(--bg3);margin-top:4px;overflow:hidden}
+.strength-fill{height:100%;width:0;transition:width 0.4s,background 0.4s}
+.strength-label{font-family:var(--font-head);font-size:0.62rem;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase}
+.gen-btn{
+  padding:0.7rem;background:transparent;border:1px solid var(--border2);
+  color:var(--accent2);font-family:var(--font-head);font-size:0.62rem;
+  letter-spacing:0.1em;cursor:pointer;text-transform:uppercase;transition:all 0.2s;
+}
+.gen-btn:hover{background:rgba(0,207,255,0.08);border-color:var(--accent2)}
+.gen-output{
+  background:var(--bg3);border:1px solid var(--border);
+  padding:0.75rem 1rem;font-family:'Courier New',monospace;
+  font-size:0.85rem;color:var(--accent);word-break:break-all;
+  min-height:42px;
+}
+.quiz-mini{margin-top:0.5rem}
+.qm-q{font-size:0.9rem;color:var(--text);margin-bottom:0.75rem;line-height:1.6}
+.qm-opts{display:flex;flex-direction:column;gap:0.5rem}
+.qm-opt{
+  padding:0.6rem 1rem;background:transparent;border:1px solid var(--border);
+  color:var(--muted);font-family:var(--font-body);font-size:0.85rem;
+  text-align:left;cursor:pointer;transition:all 0.2s;
+}
+.qm-opt:hover{border-color:var(--accent2);color:var(--accent2)}
+.qm-opt.c{border-color:var(--accent)!important;background:rgba(0,255,136,0.08)!important;color:var(--accent)!important}
+.qm-opt.w{border-color:var(--accent3)!important;background:rgba(255,60,60,0.08)!important;color:var(--accent3)!important}
+
+/* accessibility section */
+.a11y-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1rem;margin-top:1.5rem;
+}
+.a11y-card{
+  border:1px solid var(--border);background:var(--bg3);
+  padding:1.25rem;
+}
+.a11y-card .a-label{
+  font-family:var(--font-head);font-size:0.6rem;letter-spacing:0.15em;
+  color:var(--accent);text-transform:uppercase;margin-bottom:0.6rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.a11y-card .a-label::before{content:'✓';color:var(--accent)}
+.a11y-card p{font-size:0.85rem;color:var(--muted);line-height:1.7}
+.skip-link{
+  display:inline-block;margin-top:0.5rem;
+  padding:0.4rem 0.9rem;border:1px solid var(--border);
+  font-size:0.82rem;color:var(--accent2);text-decoration:none;
+  transition:background 0.2s;
+}
+.skip-link:hover{background:rgba(0,207,255,0.08)}
+.skip-link:focus{outline:2px solid var(--accent2);outline-offset:2px}
+
+/* ======================== REPORT FORM ======================== */
+.report-hero{
+  background:linear-gradient(135deg,rgba(255,60,60,0.06) 0%,var(--bg2) 100%);
+  padding:4rem 2rem;border-bottom:1px solid rgba(255,60,60,0.2);
+  text-align:center;
+}
+.report-form-wrap{
+  max-width:780px;margin:0 auto;padding:3rem 2rem 5rem;
+}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.form-full{grid-column:1/-1}
+.fg{display:flex;flex-direction:column;gap:0.4rem}
+.fg label{
+  font-family:var(--font-head);font-size:0.6rem;
+  letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;
+}
+.fg label .req{color:var(--accent3)}
+.fg input,
+.fg select,
+.fg textarea{
+  background:var(--bg3);border:1px solid rgba(221,238,255,0.1);
+  color:var(--text);padding:0.75rem 1rem;
+  font-family:var(--font-body);font-size:0.95rem;
+  outline:none;transition:border-color 0.2s;
+  appearance:none;
+}
+.fg input:focus,
+.fg select:focus,
+.fg textarea:focus{border-color:var(--accent)}
+.fg select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2300ff88' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem;cursor:pointer}
+.fg select option{background:var(--bg2);color:var(--text)}
+.priority-row{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:0.25rem}
+.prio-btn{
+  padding:0.5rem 1.1rem;border:1px solid var(--border);
+  background:transparent;color:var(--muted);
+  font-family:var(--font-head);font-size:0.6rem;letter-spacing:0.1em;
+  cursor:pointer;text-transform:uppercase;transition:all 0.2s;
+}
+.prio-btn:hover{border-color:var(--accent2);color:var(--accent2)}
+.prio-btn.selected{background:rgba(255,60,60,0.12);border-color:var(--accent3);color:var(--accent3)}
+.form-divider{
+  grid-column:1/-1;
+  display:flex;align-items:center;gap:1rem;
+  font-family:var(--font-head);font-size:0.6rem;
+  letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;
+  margin:0.5rem 0;
+}
+.form-divider::before,.form-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.checkbox-row{display:flex;align-items:flex-start;gap:0.75rem;grid-column:1/-1}
+.checkbox-row input[type=checkbox]{
+  width:18px;height:18px;min-width:18px;
+  accent-color:var(--accent);cursor:pointer;margin-top:3px;
+}
+.checkbox-row label{font-size:0.88rem;color:var(--muted);cursor:pointer;line-height:1.6}
+.checkbox-row label a{color:var(--accent2);text-decoration:none}
+.submit-btn{
+  grid-column:1/-1;
+  padding:1rem;
+  background:var(--accent3);
+  color:#fff;border:none;
+  font-family:var(--font-head);font-size:0.8rem;
+  letter-spacing:0.15em;text-transform:uppercase;
+  cursor:pointer;transition:all 0.2s;margin-top:0.5rem;
+}
+.submit-btn:hover{background:#d42020;transform:translateY(-2px)}
+.success-msg{
+  display:none;
+  text-align:center;padding:3rem 2rem;
+  border:1px solid rgba(0,255,136,0.3);
+  background:rgba(0,255,136,0.04);
+  margin-top:2rem;
+}
+.success-msg .check{font-size:3rem;margin-bottom:1rem;display:block}
+.success-msg h3{font-family:var(--font-head);font-size:1rem;letter-spacing:0.1em;color:var(--accent);margin-bottom:0.75rem}
+.success-msg p{color:var(--muted);font-size:0.95rem}
+.success-msg .ticket{font-family:'Courier New',monospace;font-size:0.85rem;color:var(--accent2);margin-top:0.75rem;display:block}
+
+/* ======================== CAREERS ======================== */
+.careers-hero{
+  background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);
+  padding:5rem 2rem;border-bottom:1px solid var(--border);
+  text-align:center;
+}
+.job-filters{display:flex;gap:0.75rem;flex-wrap:wrap;margin:2rem 0}
+.jf-btn{
+  padding:0.5rem 1.25rem;border:1px solid var(--border);
+  background:transparent;color:var(--muted);
+  font-family:var(--font-head);font-size:0.6rem;letter-spacing:0.12em;
+  cursor:pointer;text-transform:uppercase;transition:all 0.2s;
+}
+.jf-btn:hover,.jf-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,255,136,0.06)}
+.jobs-grid{display:flex;flex-direction:column;gap:1rem}
+.job-card{
+  border:1px solid var(--border);background:var(--card);
+  padding:1.75rem 2rem;
+  display:flex;align-items:center;gap:2rem;flex-wrap:wrap;
+  transition:border-color 0.3s,transform 0.2s;
+  cursor:pointer;
+}
+.job-card:hover{border-color:rgba(0,255,136,0.35);transform:translateX(4px)}
+.job-card .jc-main{flex:1;min-width:200px}
+.job-card h3{font-family:var(--font-head);font-size:0.85rem;letter-spacing:0.08em;color:var(--text);margin-bottom:0.4rem}
+.job-card .jc-dept{font-size:0.82rem;color:var(--muted)}
+.jc-tags{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.6rem}
+.jt{
+  font-family:var(--font-head);font-size:0.55rem;letter-spacing:0.1em;
+  padding:0.2rem 0.6rem;text-transform:uppercase;
+}
+.jt-g{background:rgba(0,255,136,0.08);color:var(--accent);border:1px solid rgba(0,255,136,0.2)}
+.jt-b{background:rgba(0,207,255,0.08);color:var(--accent2);border:1px solid rgba(0,207,255,0.2)}
+.job-meta{display:flex;flex-direction:column;gap:0.4rem;align-items:flex-end;min-width:140px}
+.job-loc{font-size:0.8rem;color:var(--muted)}
+.job-type{font-family:var(--font-head);font-size:0.6rem;letter-spacing:0.1em;color:var(--accent2)}
+.job-apply{
+  padding:0.5rem 1.25rem;border:1px solid var(--accent);
+  background:transparent;color:var(--accent);
+  font-family:var(--font-head);font-size:0.6rem;letter-spacing:0.12em;
+  cursor:pointer;text-transform:uppercase;transition:all 0.2s;
+}
+.job-apply:hover{background:var(--accent);color:var(--bg)}
+.perks-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:1rem;margin-top:2rem;
+}
+.perk{border:1px solid var(--border);background:var(--card);padding:1.5rem;text-align:center}
+.perk .perk-icon{font-size:2rem;margin-bottom:0.75rem;display:block}
+.perk h4{font-family:var(--font-head);font-size:0.68rem;letter-spacing:0.1em;color:var(--text);margin-bottom:0.4rem;text-transform:uppercase}
+.perk p{font-size:0.82rem;color:var(--muted)}
+
+/* FOOTER */
+footer{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  padding:3rem 2rem;
+}
+.footer-inner{
+  max-width:1140px;margin:0 auto;
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;
+}
+.footer-brand .logo-area{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.footer-brand p{font-size:0.85rem;color:var(--muted);line-height:1.8;max-width:280px}
+.footer-col h4{font-family:var(--font-head);font-size:0.65rem;letter-spacing:0.15em;color:var(--accent);text-transform:uppercase;margin-bottom:1rem}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.5rem}
+.footer-col li a{font-size:0.85rem;color:var(--muted);text-decoration:none;transition:color 0.2s;cursor:pointer}
+.footer-col li a:hover{color:var(--accent)}
+.footer-bottom{
+  max-width:1140px;margin:2rem auto 0;
+  padding-top:1.5rem;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:0.78rem;color:var(--muted);flex-wrap:wrap;gap:1rem;
+}
+.status-dot{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  font-family:var(--font-head);font-size:0.6rem;letter-spacing:0.12em;color:var(--accent);
+}
+.status-dot::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent);animation:blink 2s infinite}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .about-grid,.mission-grid,.contact-grid,.res-grid,.footer-inner{grid-template-columns:1fr}
+  .hero-content{margin-left:0}
+  .form-grid{grid-template-columns:1fr}
+  .form-full,.form-divider,.checkbox-row,.submit-btn{grid-column:1/-1}
+}
+@media(max-width:600px){
+  .nav-links li:not(:first-child):not(:last-child) a{padding:1.2rem 0.6rem;font-size:0.55rem}
+  .values-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-bar" aria-hidden="true">
+  <div class="ticker-inner">
+    <span>⚠</span> ALERT: Phishing campaign targeting Indian banks detected &nbsp;|&nbsp;
+    <span>⚠</span> Ransomware variant BlackByte spreading via RDP exploits &nbsp;|&nbsp;
+    <span>⚠</span> Critical zero-day in widely-used VPN software patched &nbsp;|&nbsp;
+    <span>⚠</span> Data breach reported at major e-commerce platform &nbsp;|&nbsp;
+    <span>⚠</span> SMS spoofing attacks rising across South Asia &nbsp;|&nbsp;
+    <!-- duplicate for seamless loop -->
+    <span>⚠</span> ALERT: Phishing campaign targeting Indian banks detected &nbsp;|&nbsp;
+    <span>⚠</span> Ransomware variant BlackByte spreading via RDP exploits &nbsp;|&nbsp;
+    <span>⚠</span> Critical zero-day in widely-used VPN software patched &nbsp;|&nbsp;
+    <span>⚠</span> Data breach reported at major e-commerce platform &nbsp;|&nbsp;
+    <span>⚠</span> SMS spoofing attacks rising across South Asia &nbsp;|&nbsp;
+  </div>
+</div>
+
+<!-- NAV -->
+<nav role="navigation" aria-label="Main navigation">
+  <a class="nav-logo-area" onclick="showPage('home')" role="button" tabindex="0" aria-label="SecureX Home">
+    <svg class="logo-svg" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <polygon points="18,2 34,10 34,26 18,34 2,26 2,10" stroke="#00ff88" stroke-width="1.5" fill="rgba(0,255,136,0.06)"/>
+      <polygon points="18,8 28,13 28,23 18,28 8,23 8,13" stroke="#00cfff" stroke-width="1" fill="rgba(0,207,255,0.04)"/>
+      <text x="18" y="22" text-anchor="middle" font-family="Orbitron" font-size="9" font-weight="900" fill="#00ff88">SX</text>
+    </svg>
+    <span class="logo-text">SECURE<span>X</span></span>
+  </a>
+  <ul class="nav-links" role="list">
+    <li><a onclick="showPage('home')" id="nav-home" class="active" tabindex="0" role="button">Home</a></li>
+    <li><a onclick="showPage('company')" id="nav-company" tabindex="0" role="button">Company Profile</a></li>
+    <li><a onclick="showPage('about')" id="nav-about" tabindex="0" role="button">About</a></li>
+    <li><a onclick="showPage('awareness')" id="nav-awareness" tabindex="0" role="button">Awareness</a></li>
+    <li><a onclick="showPage('resources')" id="nav-resources" tabindex="0" role="button">Resources</a></li>
+    <li><a onclick="showPage('careers')" id="nav-careers" tabindex="0" role="button">Careers</a></li>
+  </ul>
+  <button class="nav-report" onclick="showPage('report')" aria-label="Report a cyber incident">⚑ Report Incident</button>
+</nav>
+
+<!-- ============================================================ HOME ============================================================ -->
+<div id="page-home" class="page active">
+  <section class="hero" aria-label="Hero section">
+    <canvas id="matrix" aria-hidden="true"></canvas>
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><span class="dot"></span>Real-Time Threat Intelligence Active</div>
+      <h1>
+        <span class="line-dim">Next-Generation</span>
+        <span>Cyber</span>
+        <span class="line-accent">Security.</span>
+      </h1>
+      <p class="hero-desc">SecureX delivers enterprise-grade digital protection, threat intelligence, and security awareness to organizations across India. We defend, detect, and respond — 24/7.</p>
+      <div class="hero-btns">
+        <a class="btn-g" onclick="showPage('company')" role="button">Explore SecureX</a>
+        <a class="btn-o" onclick="showPage('report')" role="button">Report a Threat</a>
+      </div>
+      <div class="hero-stats" role="region" aria-label="Key statistics">
+        <div><span class="hstat-num" id="cnt1">0</span><span class="hstat-lbl">Threats Blocked</span></div>
+        <div><span class="hstat-num">99.9%</span><span class="hstat-lbl">Uptime SLA</span></div>
+        <div><span class="hstat-num">24/7</span><span class="hstat-lbl">SOC Monitoring</span></div>
+        <div><span class="hstat-num">500+</span><span class="hstat-lbl">Clients Protected</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="services-strip" role="region" aria-label="Our Services">
+    <div class="services-grid">
+      <div class="srv-card">
+        <span class="srv-icon" aria-hidden="true">🛡️</span>
+        <h3>Threat Detection</h3>
+        <p>AI-powered real-time monitoring and detection of advanced persistent threats across your digital infrastructure.</p>
+      </div>
+      <div class="srv-card">
+        <span class="srv-icon" aria-hidden="true">🔐</span>
+        <h3>Identity Protection</h3>
+        <p>Multi-factor authentication, zero-trust architecture, and identity governance to prevent unauthorized access.</p>
+      </div>
+      <div class="srv-card">
+        <span class="srv-icon" aria-hidden="true">📡</span>
+        <h3>Network Security</h3>
+        <p>Next-gen firewalls, intrusion prevention, and encrypted communications for complete network protection.</p>
+      </div>
+      <div class="srv-card">
+        <span class="srv-icon" aria-hidden="true">🔍</span>
+        <h3>Forensic Analysis</h3>
+        <p>Deep-dive incident response and forensic investigation to uncover attack vectors and remediate breaches.</p>
+      </div>
+      <div class="srv-card">
+        <span class="srv-icon" aria-hidden="true">☁️</span>
+        <h3>Cloud Security</h3>
+        <p>Secure your AWS, Azure, and GCP environments with continuous compliance monitoring and threat response.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="threat-monitor" role="region" aria-label="Live threat feed">
+    <div class="tm-header"><span class="tm-dot"></span>Live Threat Intelligence Feed</div>
+    <div class="threat-cards">
+      <div class="tc"><p class="tc-type">Phishing</p><p class="tc-msg">Fake HDFC Bank login portal detected — credential harvesting campaign</p><p class="tc-time">2 minutes ago · India</p></div>
+      <div class="tc"><p class="tc-type">Malware</p><p class="tc-msg">AgentTesla keylogger distributed via malicious Excel macro attachment</p><p class="tc-time">14 minutes ago · Global</p></div>
+      <div class="tc"><p class="tc-type">Ransomware</p><p class="tc-msg">LockBit 3.0 variant targeting SMB organizations in South Asia</p><p class="tc-time">1 hour ago · APAC</p></div>
+      <div class="tc"><p class="tc-type">Data Breach</p><p class="tc-msg">1.2M user records from food delivery app found on dark web forum</p><p class="tc-time">3 hours ago · India</p></div>
+    </div>
+  </div>
+  <div style="height:4rem"></div>
+</div>
+
+<!-- ============================================================ COMPANY PROFILE ============================================================ -->
+<div id="page-company" class="page">
+  <div class="cp-hero" role="banner">
+    <div class="section-wrap" style="padding:0;max-width:700px;margin:0 auto">
+      <span class="sec-tag" style="justify-content:center">// Who We Are</span>
+      <h1 class="sec-title" style="text-align:center">SecureX <span class="hi">Company Profile</span></h1>
+      <p class="sec-sub" style="margin:0 auto;text-align:center">Founded to make enterprise-grade cybersecurity accessible to every organization, SecureX is India's trusted digital security partner.</p>
+    </div>
+  </div>
+
+  <div class="section-wrap">
+    <div class="cp-stats-row" role="region" aria-label="Company statistics">
+      <div class="cp-stat"><span class="num">2018</span><span class="lbl">Founded</span></div>
+      <div class="cp-stat"><span class="num">500+</span><span class="lbl">Clients</span></div>
+      <div class="cp-stat"><span class="num">120+</span><span class="lbl">Security Experts</span></div>
+      <div class="cp-stat"><span class="num">99.9%</span><span class="lbl">Client Retention</span></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="mission-grid">
+      <div>
+        <span class="sec-tag">// Core Identity</span>
+        <h2 class="sec-title" style="font-size:1.8rem">Our Mission &amp; <span class="hi">Vision</span></h2>
+        <div class="mission-box" style="margin-bottom:1rem">
+          <h3>🎯 Mission</h3>
+          <p>To empower individuals and organizations with cutting-edge cybersecurity tools, education, and response capabilities — making the digital world safer for everyone in India and beyond.</p>
+        </div>
+        <div class="mission-box">
+          <h3>🔭 Vision</h3>
+          <p>A future where every business — regardless of size — has the knowledge, tools, and support to protect itself from digital threats. Zero breaches. Zero fear.</p>
+        </div>
+      </div>
+      <div>
+        <span class="sec-tag">// Our Journey</span>
+        <h2 class="sec-title" style="font-size:1.8rem">Company <span class="hi">Timeline</span></h2>
+        <div class="timeline" role="list">
+          <div class="tl-item" role="listitem"><span class="tl-year">2018</span><span class="tl-text">SecureX founded in Alappuzha with a team of 8 security researchers.</span></div>
+          <div class="tl-item" role="listitem"><span class="tl-year">2019</span><span class="tl-text">Launched our first SIEM product. Onboarded 50 enterprise clients within 6 months.</span></div>
+          <div class="tl-item" role="listitem"><span class="tl-year">2020</span><span class="tl-text">Expanded to Nagercoil  and Chennai. Responded to 200+ COVID-era cyberattacks.</span></div>
+          <div class="tl-item" role="listitem"><span class="tl-year">2022</span><span class="tl-text">Partnered with CERT-In. Won Best Cybersecurity Startup — India Tech Summit.</span></div>
+          <div class="tl-item" role="listitem"><span class="tl-year">2024</span><span class="tl-text">Launched SecureX Awareness Platform. 1M+ users educated across India.</span></div>
+          <div class="tl-item" role="listitem"><span class="tl-year">2025</span><span class="tl-text">Opened international offices. 500+ active clients. 24/7 global SOC launched.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <span class="sec-tag">// What We Offer</span>
+    <h2 class="sec-title">Service <span class="hi">Portfolio</span></h2>
+    <div class="services-grid" style="margin-top:2rem">
+      <div class="srv-card">
+        <span class="srv-icon">🔴</span>
+        <h3>Red Team Operations</h3>
+        <p>Simulated adversarial attacks to test and improve your organization's defenses from the attacker's perspective.</p>
+      </div>
+      <div class="srv-card">
+        <span class="srv-icon">🔵</span>
+        <h3>Blue Team Defense</h3>
+        <p>Continuous monitoring, detection, and response operations that protect your infrastructure in real-time.</p>
+      </div>
+      <div class="srv-card">
+        <span class="srv-icon">📊</span>
+        <h3>Compliance & Audit</h3>
+        <p>ISO 27001, SOC 2, GDPR, and IT Act compliance assessments with detailed remediation roadmaps.</p>
+      </div>
+      <div class="srv-card">
+        <span class="srv-icon">🎓</span>
+        <h3>Security Training</h3>
+        <p>Customized training programs and phishing simulations for employees at all levels of your organization.</p>
+      </div>
+      <div class="srv-card">
+        <span class="srv-icon">🤖</span>
+        <h3>AI Threat Hunting</h3>
+        <p>Machine learning models that detect anomalous behavior and zero-day threats before they cause damage.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ ABOUT ============================================================ -->
+<div id="page-about" class="page">
+  <div class="section-wrap">
+    <div class="about-grid">
+      <div class="about-text">
+        <span class="sec-tag">// The People Behind SecureX</span>
+        <h2 class="sec-title">About <span class="hi">Us</span></h2>
+        <p style="color:var(--muted);font-size:1rem;line-height:1.9;margin-bottom:1.5rem">
+          SecureX was born from a simple belief: cybersecurity shouldn't be a privilege reserved for large corporations. Our team of passionate security professionals, ethical hackers, and researchers work tirelessly to defend the digital assets of businesses and individuals alike.
+        </p>
+        <p style="color:var(--muted);font-size:1rem;line-height:1.9;margin-bottom:2rem">
+          With deep roots in Kerala and a national presence, we bring together technical excellence and a genuine commitment to making India's digital ecosystem safer.
+        </p> 
+        <div class="values-grid" role="list">
+          <div class="val-card" role="listitem"><h4>🔒 Integrity</h4><p>We operate with complete transparency and ethical conduct in every engagement.</p></div>
+          <div class="val-card" role="listitem"><h4>⚡ Speed</h4><p>Rapid response is core to our DNA. Every second counts when you're under attack.</p></div>
+          <div class="val-card" role="listitem"><h4>🧠 Innovation</h4><p>We continuously research and adopt the latest in threat detection and prevention.</p></div>
+          <div class="val-card" role="listitem"><h4>🤝 Partnership</h4><p>We don't just protect clients — we become their long-term security partners.</p></div>
+        </div>
+      </div>
+      <div class="about-vis" aria-hidden="true">
+        <span class="float-tag">ISO 27001 Certified</span>
+        <span class="float-tag">CERT-In Partner</span>
+        <span class="float-tag">24/7 SOC</span>
+        <div class="hex-ring">
+          <div class="hex-inner">SX<small>SECURE X</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="team-section" role="region" aria-label="Leadership Team">
+      <span class="sec-tag">// Leadership</span>
+      <h2 class="sec-title">Meet The <span class="hi">Team</span></h2>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar ta-g">GTM</div>
+          <div class="team-info">
+            <h4>GOUTHAM GOPAN</h4>
+            <p class="role">CEO & Co-Founder</p>
+            <p>12 years in offensive security. Former DRDO researcher. Leads strategy and government partnerships.</p>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar ta-b">PMN</div>
+          <div class="team-info">
+            <h4>PRANAV M NAMBIAR</h4>
+            <p class="role">CTO & Co-Founder</p>
+            <p>AI/ML security researcher. Built SecureX's threat intelligence engine. AMRITA UNIVERSITY alumna.</p>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar ta-r">DMK</div>
+          <div class="team-info">
+            <h4>DHANUMALYAN K</h4>
+            <p class="role">Head of Red Team</p>
+            <p>Certified ethical hacker. 8 years leading penetration testing and red team operations.</p>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar ta-y">ABS</div>
+          <div class="team-info">
+            <h4>ABHISHEK S </h4>
+            <p class="role">Head of Awareness</p>
+            <p>Cybersecurity educator and trainer. Led 500+ workshops across Kerala, Tamil Nadu, and Karnataka.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ AWARENESS ============================================================ -->
+<div id="page-awareness" class="page">
+  <div class="awareness-hero" role="banner">
+    <span class="sec-tag" style="justify-content:center">// Protect Yourself Online</span>
+    <h1 class="sec-title" style="text-align:center">Cyber <span class="hi">Awareness</span> Hub</h1>
+    <p class="sec-sub" style="margin:0 auto;text-align:center">Knowledge is your strongest weapon. Learn to identify, avoid, and report cyberthreats targeting you every day.</p>
+    <div class="stat-banner" role="region" aria-label="Cybercrime statistics" style="max-width:900px;margin:2.5rem auto 0">
+      <div><span class="sb-num">4,000+</span><span class="sb-lbl">Cyberattacks per day in India</span></div>
+      <div><span class="sb-num">₹1.25L Cr</span><span class="sb-lbl">Annual cybercrime losses</span></div>
+      <div><span class="sb-num">95%</span><span class="sb-lbl">Caused by human error</span></div>
+      <div><span class="sb-num">67 sec</span><span class="sb-lbl">Between ransomware attacks</span></div>
+    </div>
+  </div>
+
+  <div class="section-wrap">
+    <span class="sec-tag">// Know The Threats</span>
+    <h2 class="sec-title">Threats You <span class="hi">Must Know</span></h2>
+    <div class="aw-grid" role="list">
+      <div class="aw-card" role="listitem">
+        <span class="severity sev-high" aria-label="High severity">HIGH</span>
+        <span class="aw-icon" aria-hidden="true">🎣</span>
+        <h3>Phishing Attacks</h3>
+        <p>Attackers impersonate banks, government, or companies via fake emails and websites to steal your credentials and financial details.</p>
+        <ul class="aw-tips" aria-label="Protection tips">
+          <li>Always verify the sender's email domain</li>
+          <li>Never click links in unsolicited emails</li>
+          <li>Check for HTTPS and valid certificates</li>
+          <li>Enable 2FA on all accounts</li>
+        </ul>
+      </div>
+      <div class="aw-card" role="listitem">
+        <span class="severity sev-high" aria-label="High severity">HIGH</span>
+        <span class="aw-icon" aria-hidden="true">🔒</span>
+        <h3>Ransomware</h3>
+        <p>Malicious software that encrypts all your files and demands cryptocurrency payment for the decryption key. Can devastate businesses.</p>
+        <ul class="aw-tips">
+          <li>Maintain offline backups (3-2-1 rule)</li>
+          <li>Never open unknown email attachments</li>
+          <li>Keep all software fully updated</li>
+          <li>Use reputable endpoint protection</li>
+        </ul>
+      </div>
+      <div class="aw-card" role="listitem">
+        <span class="severity sev-high" aria-label="High severity">HIGH</span>
+        <span class="aw-icon" aria-hidden="true">📱</span>
+        <h3>Social Engineering</h3>
+        <p>Psychological manipulation to trick you into revealing sensitive information or transferring money. Includes vishing (voice phishing) and smishing (SMS phishing).</p>
+        <ul class="aw-tips">
+          <li>Never share OTPs — banks don't ask</li>
+          <li>Verify callers claiming to be officials</li>
+          <li>Be suspicious of urgency tactics</li>
+          <li>Hang up and call back on official numbers</li>
+        </ul>
+      </div>
+      <div class="aw-card" role="listitem">
+        <span class="severity sev-med" aria-label="Medium severity">MEDIUM</span>
+        <span class="aw-icon" aria-hidden="true">🕵️</span>
+        <h3>Spyware &amp; Stalkerware</h3>
+        <p>Hidden software that monitors your device activity, keystrokes, location, and conversations without your knowledge or consent.</p>
+        <ul class="aw-tips">
+          <li>Review app permissions regularly</li>
+          <li>Unusual battery drain may indicate spyware</li>
+          <li>Use reputable antivirus solutions</li>
+          <li>Factory reset if compromise is suspected</li>
+        </ul>
+      </div>
+      <div class="aw-card" role="listitem">
+        <span class="severity sev-med" aria-label="Medium severity">MEDIUM</span>
+        <span class="aw-icon" aria-hidden="true">🌐</span>
+        <h3>Public Wi-Fi Attacks</h3>
+        <p>Man-in-the-middle attacks on unsecured public Wi-Fi networks that intercept your internet traffic, passwords, and financial transactions.</p>
+        <ul class="aw-tips">
+          <li>Always use a VPN on public Wi-Fi</li>
+          <li>Avoid banking on public networks</li>
+          <li>Verify network name with the venue</li>
+          <li>Prefer mobile data for sensitive tasks</li>
+        </ul>
+      </div>
+      <div class="aw-card" role="listitem">
+        <span class="severity sev-low" aria-label="Low-medium severity">AWARENESS</span>
+        <span class="aw-icon" aria-hidden="true">🔑</span>
+        <h3>Weak Password Risks</h3>
+        <p>Using simple, reused, or common passwords is one of the leading causes of account takeovers and data breaches worldwide.</p>
+        <ul class="aw-tips">
+          <li>Use a password manager (Bitwarden, 1Password)</li>
+          <li>Minimum 12 characters with mixed types</li>
+          <li>Never reuse passwords across sites</li>
+          <li>Enable multi-factor authentication</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="video-section" role="region" aria-label="Awareness video">
+    <div style="max-width:860px;margin:0 auto">
+      <span class="sec-tag">// Watch &amp; Learn</span>
+      <h2 class="sec-title">Cybersecurity <span class="hi">Awareness Video</span></h2>
+      <p class="sec-sub" style="margin-bottom:0">A must-watch resource explaining how modern cyberattacks work and how to protect yourself.</p>
+    </div>
+    <div class="video-wrap">
+      <video
+  controls
+  width="100%"
+  style="display:block;border:1px solid rgba(0,255,136,0.2)">
+ <source src="myvideo.mp4" type="video/mp4">
+</video>
+      <div class="video-caption">
+        <div>
+          <strong>Featured Resource</strong>
+          <p>Cybersecurity fundamentals: understanding threats, securing your accounts, and staying safe online — explained clearly for everyone.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="height:2rem"></div>
+</div>
+
+<!-- ============================================================ RESOURCES ============================================================ -->
+<div id="page-resources" class="page">
+  <div class="section-wrap">
+    <div class="res-intro">
+      <span class="sec-tag" style="justify-content:center">// Knowledge Base</span>
+      <h2 class="sec-title">Security <span class="hi">Resources</span></h2>
+      <p class="sec-sub">External references, interactive tools, and accessible learning materials for cybersecurity professionals and newcomers alike.</p>
+    </div>
+
+    <div class="res-grid">
+      <!-- External Links -->
+      <div class="res-card" role="region" aria-label="External security links">
+        <h3><span aria-hidden="true">🔗</span> External References</h3>
+        <ul class="link-list" role="list">
+          <li role="listitem">
+            <span class="link-type lt-org" aria-label="Government resource">GOV</span>
+            <a href="https://www.cert-in.org.in" target="_blank" rel="noopener noreferrer" aria-label="CERT-In — India's national cyber agency (opens in new tab)">CERT-In — India National Cyber Agency ↗</a>
+          </li>
+          <li role="listitem">
+            <span class="link-type lt-org" aria-label="Government resource">GOV</span>
+            <a href="https://cybercrime.gov.in" target="_blank" rel="noopener noreferrer" aria-label="National Cyber Crime Reporting Portal (opens in new tab)">National Cybercrime Reporting Portal ↗</a>
+          </li>
+          <li role="listitem">
+            <span class="link-type lt-ext" aria-label="External tool">TOOL</span>
+            <a href="https://haveibeenpwned.com" target="_blank" rel="noopener noreferrer" aria-label="Have I Been Pwned — check if your email was breached (opens in new tab)">Have I Been Pwned — Breach Checker ↗</a>
+          </li>
+          <li role="listitem">
+            <span class="link-type lt-ext" aria-label="External database">CVE</span>
+            <a href="https://cve.mitre.org" target="_blank" rel="noopener noreferrer" aria-label="MITRE CVE Database (opens in new tab)">MITRE CVE Vulnerability Database ↗</a>
+          </li>
+          <li role="listitem">
+            <span class="link-type lt-doc" aria-label="Documentation">DOCS</span>
+            <a href="https://owasp.org/www-project-top-ten/" target="_blank" rel="noopener noreferrer" aria-label="OWASP Top 10 Web Application Risks (opens in new tab)">OWASP Top 10 Web Vulnerabilities ↗</a>
+          </li>
+          <li role="listitem">
+            <span class="link-type lt-doc" aria-label="Framework document">NIST</span>
+            <a href="https://www.nist.gov/cyberframework" target="_blank" rel="noopener noreferrer" aria-label="NIST Cybersecurity Framework (opens in new tab)">NIST Cybersecurity Framework ↗</a>
+          </li>
+          <li role="listitem">
+            <span class="link-type lt-tool" aria-label="Learning platform">LEARN</span>
+            <a href="https://tryhackme.com" target="_blank" rel="noopener noreferrer" aria-label="TryHackMe — hands-on cybersecurity learning (opens in new tab)">TryHackMe — Hands-On Learning ↗</a>
+          </li>
+          <li role="listitem">
+            <span class="link-type lt-tool" aria-label="Learning platform">LEARN</span>
+            <a href="https://www.sans.org/reading-room/" target="_blank" rel="noopener noreferrer" aria-label="SANS Reading Room — cybersecurity research papers (opens in new tab)">SANS Reading Room — Research ↗</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Interactive Password Tool -->
+      <div class="res-card" role="region" aria-label="Interactive security tools">
+        <h3><span aria-hidden="true">⚙️</span> Interactive Tools</h3>
+        <div class="tool-row">
+          <!-- Password Strength -->
+          <div>
+            <p style="font-family:var(--font-head);font-size:0.62rem;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin-bottom:0.6rem">Password Strength Checker</p>
+            <div class="pw-check" role="group" aria-label="Password strength checker">
+              <div class="pw-input-row">
+                <input type="password" id="pw-in" placeholder="Type a password to test..." oninput="checkPW()" aria-label="Enter password to check strength" autocomplete="new-password"/>
+                <button onclick="togglePW()" aria-label="Show or hide password">👁</button>
+              </div>
+              <div class="strength-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pw-bar-aria">
+                <div class="strength-fill" id="pw-bar"></div>
+              </div>
+              <span class="strength-label" id="pw-label" aria-live="polite">Enter a password above</span>
+            </div>
+          </div>
+
+          <div class="divider" style="margin:1rem 0;opacity:0.15"></div>
+
+          <!-- Password Generator -->
+          <div>
+            <p style="font-family:var(--font-head);font-size:0.62rem;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin-bottom:0.6rem">Secure Password Generator</p>
+            <button class="gen-btn" onclick="genPW()" style="width:100%;margin-bottom:0.5rem" aria-label="Generate a secure password">Generate Secure Password</button>
+            <div class="gen-output" id="gen-out" aria-live="polite" role="status">Click generate to create a strong password</div>
+            <button onclick="copyPW()" style="margin-top:0.4rem;padding:0.4rem 0.9rem;background:transparent;border:1px solid var(--border);color:var(--muted);font-family:var(--font-head);font-size:0.58rem;letter-spacing:0.1em;cursor:pointer;text-transform:uppercase;transition:color 0.2s" aria-label="Copy generated password to clipboard" id="copy-btn">Copy to Clipboard</button>
+          </div>
+
+          <div class="divider" style="margin:1rem 0;opacity:0.15"></div>
+
+          <!-- Mini quiz -->
+          <div class="quiz-mini" role="region" aria-label="Quick security quiz">
+            <p style="font-family:var(--font-head);font-size:0.62rem;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin-bottom:0.6rem">Quick Security Check</p>
+            <p class="qm-q" id="qm-q">Which of the following is safest to use on public Wi-Fi?</p>
+            <div class="qm-opts" id="qm-opts" role="list">
+              <button class="qm-opt" onclick="answerQM(0)" role="listitem">Online banking without VPN</button>
+              <button class="qm-opt" onclick="answerQM(1)" role="listitem">Browsing with a VPN enabled</button>
+              <button class="qm-opt" onclick="answerQM(2)" role="listitem">Sharing files via Bluetooth</button>
+              <button class="qm-opt" onclick="answerQM(3)" role="listitem">Logging into social media</button>
+            </div>
+            <p id="qm-result" style="margin-top:0.6rem;font-size:0.82rem;display:none" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accessibility showcase -->
+      <div class="res-card" role="region" aria-label="Accessibility features" style="grid-column:1/-1">
+        <h3><span aria-hidden="true">♿</span> Accessibility &amp; Inclusive Design</h3>
+        <p style="font-size:0.88rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.8">This website is built following WCAG 2.1 AA accessibility standards to ensure all users — including those using assistive technologies — can access our cybersecurity resources effectively.</p>
+        <div class="a11y-grid" role="list">
+          <div class="a11y-card" role="listitem">
+            <p class="a-label">Keyboard Navigation</p>
+            <p>All interactive elements are fully navigable via keyboard. Tab through links, buttons, and form fields. Press Enter or Space to activate.</p>
+            <a href="#main-content" class="skip-link" tabindex="0">Skip to main content</a>
+          </div>
+          <div class="a11y-card" role="listitem">
+            <p class="a-label">Screen Reader Support</p>
+            <p>Semantic HTML5 with proper ARIA roles, labels, and live regions ensures compatibility with NVDA, JAWS, and VoiceOver screen readers.</p>
+          </div>
+          <div class="a11y-card" role="listitem">
+            <p class="a-label">Colour Contrast</p>
+            <p>All text meets WCAG AA minimum contrast ratios (4.5:1 for normal text, 3:1 for large text) against background colours.</p>
+          </div>
+          <div class="a11y-card" role="listitem">
+            <p class="a-label">Focus Indicators</p>
+            <p>Clear visual focus rings on all interactive elements. No element loses its focus indicator in the stylesheet.</p>
+          </div>
+          <div class="a11y-card" role="listitem">
+            <p class="a-label">Alt Text &amp; ARIA</p>
+            <p>All images have descriptive alt text. Decorative images use aria-hidden="true". Form inputs have associated labels.</p>
+          </div>
+          <div class="a11y-card" role="listitem">
+            <p class="a-label">Responsive Design</p>
+            <p>Fully responsive layout that works on all devices and screen sizes without horizontal scrolling or zoom requirements.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ REPORT ============================================================ -->
+<div id="page-report" class="page">
+  <div class="report-hero" role="banner">
+    <span class="sec-tag" style="justify-content:center;color:var(--accent3)">// File a Complaint</span>
+    <h1 class="sec-title" style="text-align:center">Report a <span style="color:var(--accent3)">Cyber Incident</span></h1>
+    <p class="sec-sub" style="margin:0 auto;text-align:center">Experienced a cyberattack, scam, or data breach? Report it to our security team and we'll assist you within 24 hours.</p>
+  </div>
+
+  <div class="report-form-wrap">
+    <form id="report-form" onsubmit="submitReport(event)" novalidate aria-label="Cyber incident report form">
+      <div class="form-grid">
+        <!-- Personal Info -->
+        <div class="form-divider">Personal Information</div>
+        <div class="fg">
+          <label for="f-name">Full Name <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="f-name" name="name" placeholder="Your full name" required autocomplete="name" aria-required="true"/>
+        </div>
+        <div class="fg">
+          <label for="f-email">Email Address <span class="req" aria-hidden="true">*</span></label>
+          <input type="email" id="f-email" name="email" placeholder="your@email.com" required autocomplete="email" aria-required="true"/>
+        </div>
+        <div class="fg">
+          <label for="f-phone">Phone Number</label>
+          <input type="tel" id="f-phone" name="phone" placeholder="+91 XXXXX XXXXX" autocomplete="tel"/>
+        </div>
+        <div class="fg">
+          <label for="f-state">State / Region <span class="req" aria-hidden="true">*</span></label>
+          <select id="f-state" name="state" required aria-required="true">
+            <option value="" disabled selected>Select your state</option>
+            <option>Kerala</option>
+            <option>Tamil Nadu</option>
+            <option>Karnataka</option>
+            <option>Andhra Pradesh</option>
+            <option>Maharashtra</option>
+            <option>Delhi</option>
+            <option>West Bengal</option>
+            <option>Gujarat</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <!-- Incident Info -->
+        <div class="form-divider">Incident Details</div>
+        <div class="fg form-full">
+          <label for="f-type">Type of Cyber Incident <span class="req" aria-hidden="true">*</span></label>
+          <select id="f-type" name="type" required aria-required="true">
+            <option value="" disabled selected>Select incident type</option>
+            <option>Phishing / Fake Website</option>
+            <option>Financial Fraud / Scam</option>
+            <option>Ransomware Attack</option>
+            <option>Account Hacked</option>
+            <option>Data Breach</option>
+            <option>Online Harassment / Cyberbullying</option>
+            <option>Malware / Virus Infection</option>
+            <option>Identity Theft</option>
+            <option>Unauthorized Access</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label for="f-date">Date of Incident <span class="req" aria-hidden="true">*</span></label>
+          <input type="date" id="f-date" name="date" required aria-required="true"/>
+        </div>
+        <div class="fg">
+          <label>Priority Level</label>
+          <div class="priority-row" role="group" aria-label="Select priority level">
+            <button type="button" class="prio-btn" onclick="setPrio(this,'low')" aria-pressed="false">🟢 Low</button>
+            <button type="button" class="prio-btn" onclick="setPrio(this,'medium')" aria-pressed="false">🟡 Medium</button>
+            <button type="button" class="prio-btn selected" onclick="setPrio(this,'high')" aria-pressed="true">🔴 High</button>
+            <button type="button" class="prio-btn" onclick="setPrio(this,'critical')" aria-pressed="false">⚫ Critical</button>
+          </div>
+        </div>
+        <div class="fg form-full">
+          <label for="f-url">Suspicious URL / Source (if any)</label>
+          <input type="url" id="f-url" name="url" placeholder="https://suspicious-site.com"/>
+        </div>
+        <div class="fg form-full">
+          <label for="f-desc">Describe the Incident <span class="req" aria-hidden="true">*</span></label>
+          <textarea id="f-desc" name="description" rows="5" placeholder="Please describe what happened in detail — what you saw, what actions you took, any suspicious messages or callers..." required aria-required="true"></textarea>
+        </div>
+        <div class="fg form-full">
+          <label for="f-loss">Financial Loss (if any)</label>
+          <input type="text" id="f-loss" name="loss" placeholder="e.g. ₹15,000 transferred via UPI"/>
+        </div>
+
+        <!-- Consent -->
+        <div class="form-divider">Consent &amp; Submission</div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="f-consent" name="consent" required aria-required="true"/>
+          <label for="f-consent">I consent to SecureX processing this information to investigate my complaint and provide assistance. I understand this data will be kept confidential. <a href="#" aria-label="Read privacy policy">Privacy Policy</a></label>
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="f-notify" name="notify"/>
+          <label for="f-notify">Keep me updated via email with the progress of my report.</label>
+        </div>
+        <button type="submit" class="submit-btn" aria-label="Submit cyber incident report">⚑ Submit Incident Report</button>
+      </div>
+    </form>
+
+    <div class="success-msg" id="success-msg" role="alert" aria-live="assertive">
+      <span class="check">✅</span>
+      <h3>Report Received Successfully</h3>
+      <p>Our security team will review your report and contact you within <strong>24 hours</strong>. You can also reach us directly at <strong>support@securex.in</strong></p>
+      <span class="ticket" id="ticket-id">Ticket #SX-000000</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ CAREERS ============================================================ -->
+<div id="page-careers" class="page">
+  <div class="careers-hero" role="banner">
+    <span class="sec-tag" style="justify-content:center">// Join The Team</span>
+    <h1 class="sec-title" style="text-align:center">Careers at <span class="hi">SecureX</span></h1>
+    <p class="sec-sub" style="margin:0 auto;text-align:center">Help us build a safer internet. We're looking for passionate security professionals, developers, and researchers.</p>
+  </div>
+
+  <div class="section-wrap">
+    <div class="job-filters" role="group" aria-label="Filter jobs by department">
+      <button class="jf-btn active" onclick="filterJobs('all',this)" aria-pressed="true">All Roles</button>
+      <button class="jf-btn" onclick="filterJobs('security',this)" aria-pressed="false">Security</button>
+      <button class="jf-btn" onclick="filterJobs('engineering',this)" aria-pressed="false">Engineering</button>
+      <button class="jf-btn" onclick="filterJobs('research',this)" aria-pressed="false">Research</button>
+      <button class="jf-btn" onclick="filterJobs('ops',this)" aria-pressed="false">Operations</button>
+    </div>
+
+    <div class="jobs-grid" id="jobs-list" role="list">
+      <div class="job-card" data-dept="security" role="listitem">
+        <div class="jc-main">
+          <h3>Senior Penetration Tester</h3>
+          <p class="jc-dept">Security · Red Team</p>
+          <div class="jc-tags"><span class="jt jt-g">OSCP Required</span><span class="jt jt-b">Senior</span></div>
+        </div>
+        <div class="job-meta">
+          <span class="job-loc">📍 Thiruvananthapuram / Remote</span>
+          <span class="job-type">Full-Time</span>
+        </div>
+        <button class="job-apply" aria-label="Apply for Senior Penetration Tester">Apply Now</button>
+      </div>
+      <div class="job-card" data-dept="engineering" role="listitem">
+        <div class="jc-main">
+          <h3>Security Engineer (SIEM)</h3>
+          <p class="jc-dept">Engineering · Platform</p>
+          <div class="jc-tags"><span class="jt jt-g">Splunk / Elastic</span><span class="jt jt-b">Mid-Level</span></div>
+        </div>
+        <div class="job-meta">
+          <span class="job-loc">📍 Bangalore</span>
+          <span class="job-type">Full-Time</span>
+        </div>
+        <button class="job-apply" aria-label="Apply for Security Engineer SIEM position">Apply Now</button>
+      </div>
+      <div class="job-card" data-dept="research" role="listitem">
+        <div class="jc-main">
+          <h3>Malware Researcher</h3>
+          <p class="jc-dept">Research · Threat Intelligence</p>
+          <div class="jc-tags"><span class="jt jt-g">Reverse Engineering</span><span class="jt jt-b">Senior</span></div>
+        </div>
+        <div class="job-meta">
+          <span class="job-loc">📍 Remote — India</span>
+          <span class="job-type">Full-Time</span>
+        </div>
+        <button class="job-apply" aria-label="Apply for Malware Researcher position">Apply Now</button>
+      </div>
+      <div class="job-card" data-dept="security" role="listitem">
+        <div class="jc-main">
+          <h3>SOC Analyst (L2)</h3>
+          <p class="jc-dept">Security · Blue Team</p>
+          <div class="jc-tags"><span class="jt jt-g">SIEM / EDR</span><span class="jt jt-b">Mid-Level</span></div>
+        </div>
+        <div class="job-meta">
+          <span class="job-loc">📍 Chennai / Hybrid</span>
+          <span class="job-type">Full-Time · 24/7 Shifts</span>
+        </div>
+        <button class="job-apply" aria-label="Apply for SOC Analyst Level 2 position">Apply Now</button>
+      </div>
+      <div class="job-card" data-dept="engineering" role="listitem">
+        <div class="jc-main">
+          <h3>Cloud Security Architect</h3>
+          <p class="jc-dept">Engineering · Cloud</p>
+          <div class="jc-tags"><span class="jt jt-g">AWS / Azure</span><span class="jt jt-b">Lead</span></div>
+        </div>
+        <div class="job-meta">
+          <span class="job-loc">📍 Mumbai / Remote</span>
+          <span class="job-type">Full-Time</span>
+        </div>
+        <button class="job-apply" aria-label="Apply for Cloud Security Architect position">Apply Now</button>
+      </div>
+      <div class="job-card" data-dept="ops" role="listitem">
+        <div class="jc-main">
+          <h3>Cybersecurity Trainer</h3>
+          <p class="jc-dept">Operations · Awareness</p>
+          <div class="jc-tags"><span class="jt jt-g">Public Speaking</span><span class="jt jt-b">Any Level</span></div>
+        </div>
+        <div class="job-meta">
+          <span class="job-loc">📍 All India · Travel Required</span>
+          <span class="job-type">Full-Time</span>
+        </div>
+        <button class="job-apply" aria-label="Apply for Cybersecurity Trainer position">Apply Now</button>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <span class="sec-tag">// Why SecureX</span>
+    <h2 class="sec-title">Perks &amp; <span class="hi">Benefits</span></h2>
+    <div class="perks-grid" role="list">
+      <div class="perk" role="listitem"><span class="perk-icon">💰</span><h4>Competitive Pay</h4><p>Top-of-market salaries + performance bonuses and equity options.</p></div>
+      <div class="perk" role="listitem"><span class="perk-icon">🏡</span><h4>Remote Friendly</h4><p>Flexible remote and hybrid working options across most roles.</p></div>
+      <div class="perk" role="listitem"><span class="perk-icon">🎓</span><h4>Learning Budget</h4><p>₹1L annual budget for certifications, conferences, and courses.</p></div>
+      <div class="perk" role="listitem"><span class="perk-icon">🏥</span><h4>Health Cover</h4><p>Comprehensive health insurance for you and your family.</p></div>
+      <div class="perk" role="listitem"><span class="perk-icon">⚡</span><h4>Latest Tools</h4><p>Access to cutting-edge security tools, labs, and research environments.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo-area">
+        <svg width="32" height="32" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <polygon points="18,2 34,10 34,26 18,34 2,26 2,10" stroke="#00ff88" stroke-width="1.5" fill="rgba(0,255,136,0.06)"/>
+          <text x="18" y="22" text-anchor="middle" font-family="Orbitron" font-size="9" font-weight="900" fill="#00ff88">SX</text>
+        </svg>
+        <span style="font-family:var(--font-head);font-size:1rem;font-weight:900;color:var(--accent)">SECURE<span style="color:var(--accent2)">X</span></span>
+      </div>
+      <p>India's trusted cybersecurity partner. Defending digital assets with intelligence, precision, and 24/7 vigilance.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a onclick="showPage('company')" tabindex="0">Company Profile</a></li>
+        <li><a onclick="showPage('about')" tabindex="0">About Us</a></li>
+        <li><a onclick="showPage('careers')" tabindex="0">Careers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a onclick="showPage('awareness')" tabindex="0">Awareness Hub</a></li>
+        <li><a onclick="showPage('resources')" tabindex="0">Security Tools</a></li>
+        <li><a onclick="showPage('report')" tabindex="0">Report Incident</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a>support@securex.in</a></li>
+        <li><a>+91 471 000 0000</a></li>
+        <li><a>Thiruvananthapuram, Kerala</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 SecureX — All Rights Reserved</span>
+    <span class="status-dot">All Systems Operational</span>
+  </div>
+</footer>
+
+<script>
+// ── PAGE NAVIGATION ──
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const navEl=document.getElementById('nav-'+id);
+  if(navEl)navEl.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── MATRIX CANVAS ──
+(function(){
+  const c=document.getElementById('matrix');
+  if(!c)return;
+  const ctx=c.getContext('2d');
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  const chars='SECUREX01アイウエオカキクケコサシスセソタチツテトナニヌネノ'.split('');
+  const cols=Math.floor(c.width/18);
+  const drops=Array(cols).fill(1);
+  setInterval(()=>{
+    ctx.fillStyle='rgba(2,11,15,0.05)';
+    ctx.fillRect(0,0,c.width,c.height);
+    ctx.fillStyle='#00ff88';
+    ctx.font='14px monospace';
+    drops.forEach((y,i)=>{
+      const ch=chars[Math.floor(Math.random()*chars.length)];
+      ctx.fillText(ch,i*18,y*18);
+      if(y*18>c.height&&Math.random()>0.975)drops[i]=0;
+      drops[i]++;
+    });
+  },50);
+})();
+
+// ── COUNTER ANIMATION ──
+function animCount(el,target,duration){
+  let start=0;const step=target/((duration/16));
+  const t=setInterval(()=>{
+    start+=step;
+    if(start>=target){start=target;clearInterval(t)}
+    el.textContent=Math.floor(start).toLocaleString()+'+';
+  },16);
+}
+setTimeout(()=>{const el=document.getElementById('cnt1');if(el)animCount(el,24893,2000)},500);
+
+// ── PASSWORD STRENGTH ──
+function checkPW(){
+  const v=document.getElementById('pw-in').value;
+  const bar=document.getElementById('pw-bar');
+  const lbl=document.getElementById('pw-label');
+  const ariaBar=document.getElementById('pw-bar-aria');
+  if(!v){bar.style.width='0';bar.style.background='';lbl.textContent='Enter a password above';return}
+  let s=0;
+  if(v.length>=8)s+=20;if(v.length>=12)s+=15;if(v.length>=16)s+=10;
+  if(/[A-Z]/.test(v))s+=15;if(/[a-z]/.test(v))s+=10;
+  if(/[0-9]/.test(v))s+=15;if(/[^A-Za-z0-9]/.test(v))s+=15;
+  s=Math.min(s,100);
+  const levels=[
+    [20,'Very Weak','#ff3c3c'],
+    [40,'Weak','#ff6b35'],
+    [60,'Fair','#ffc83c'],
+    [80,'Strong','#00cfff'],
+    [100,'Very Strong','#00ff88']
+  ];
+  const [,label,color]=levels.find(([max])=>s<=max)||levels[4];
+  bar.style.width=s+'%';bar.style.background=color;
+  lbl.textContent=label+' ('+s+'%)';lbl.style.color=color;
+  ariaBar.setAttribute('aria-valuenow',s);
+  ariaBar.setAttribute('aria-valuetext',label);
+}
+
+function togglePW(){
+  const i=document.getElementById('pw-in');
+  i.type=i.type==='password'?'text':'password';
+}
+
+// ── PASSWORD GENERATOR ──
+const pwChars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*';
+function genPW(){
+  let pw='';
+  for(let i=0;i<18;i++)pw+=pwChars[Math.floor(Math.random()*pwChars.length)];
+  document.getElementById('gen-out').textContent=pw;
+}
+
+function copyPW(){
+  const t=document.getElementById('gen-out').textContent;
+  if(t==='Click generate to create a strong password')return;
+  navigator.clipboard.writeText(t).then(()=>{
+    const btn=document.getElementById('copy-btn');
+    btn.textContent='✓ Copied!';btn.style.color='var(--accent)';
+    setTimeout(()=>{btn.textContent='Copy to Clipboard';btn.style.color=''},2000);
+  });
+}
+
+// ── MINI QUIZ ──
+function answerQM(i){
+  const opts=document.querySelectorAll('.qm-opt');
+  opts.forEach(o=>{o.disabled=true});
+  const res=document.getElementById('qm-result');
+  if(i===1){
+    opts[1].classList.add('c');
+    res.style.display='block';res.style.color='var(--accent)';
+    res.textContent='✓ Correct! A VPN encrypts your traffic and protects you on public networks.';
+  } else {
+    opts[i].classList.add('w');opts[1].classList.add('c');
+    res.style.display='block';res.style.color='var(--accent3)';
+    res.textContent='✗ Incorrect. Using a VPN is the safest practice on public Wi-Fi.';
+  }
+}
+
+// ── PRIORITY BUTTONS ──
+function setPrio(el,val){
+  document.querySelectorAll('.prio-btn').forEach(b=>{b.classList.remove('selected');b.setAttribute('aria-pressed','false')});
+  el.classList.add('selected');el.setAttribute('aria-pressed','true');
+}
+
+// ── FORM SUBMIT ──
+function submitReport(e){
+  e.preventDefault();
+  const form=document.getElementById('report-form');
+  const name=document.getElementById('f-name').value.trim();
+  const email=document.getElementById('f-email').value.trim();
+  const state=document.getElementById('f-state').value;
+  const type=document.getElementById('f-type').value;
+  const desc=document.getElementById('f-desc').value.trim();
+  const consent=document.getElementById('f-consent').checked;
+  if(!name||!email||!state||!type||!desc||!consent){
+    alert('Please fill in all required fields and accept the consent checkbox.');return;
+  }
+  const ticket='SX-'+Date.now().toString().slice(-6);
+  document.getElementById('ticket-id').textContent='Your Ticket ID: #'+ticket;
+  const reportData = {
+  ticket, name, email,
+  phone: document.getElementById('f-phone').value.trim(),
+  state, type,
+  date: document.getElementById('f-date').value,
+  priority: document.querySelector('.prio-btn.selected')?.textContent.trim().replace(/[^a-z]/gi,'').toLowerCase() || 'high',
+  status: 'open',
+  url: document.getElementById('f-url').value.trim(),
+  description: desc,
+  loss: document.getElementById('f-loss').value.trim(),
+  notify: document.getElementById('f-notify').checked,
+  submittedAt: new Date().toISOString()
+};
+const stored = JSON.parse(localStorage.getItem('sx_reports') || '[]');
+stored.unshift(reportData);
+localStorage.setItem('sx_reports', JSON.stringify(stored));
+  form.style.display='none';
+  document.getElementById('success-msg').style.display='block';
+}
+
+// ── JOB FILTER ──
+function filterJobs(dept,btn){
+  document.querySelectorAll('.jf-btn').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false')});
+  btn.classList.add('active');btn.setAttribute('aria-pressed','true');
+  document.querySelectorAll('.job-card').forEach(card=>{
+    card.style.display=(dept==='all'||card.dataset.dept===dept)?'flex':'none';
+  });
+}
+
+// ── KEYBOARD NAV ──
+document.querySelectorAll('[role="button"]').forEach(el=>{
+  el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();el.click()}});
+});
+</script>
+</body>
+</html>
